@@ -1,0 +1,99 @@
+{
+  "tokenHashes": {
+    "HH-040": "6eb21e45747a9e930ab8538cb51db4a5d70926c0987fcaea6890caa69d5eb53a",
+    "HH-041": "5edcb94d20defb9ac14dab650ed97afd1d60cf522dad743939ca4ee06c02ee8e",
+    "HH-042": "876d16c5a9a59b4f1aec3886a57541610b283f1e03d9f4f75ad3b6103f4f4d12"
+  },
+  "eventHashes": [
+    "1b742439a6de4251617d0e68b1503f000527f589ef25635b76853b830ef1bb0b",
+    "b6841515579391d9de24bbb3cf35bab7f5ba9ec328668970258c347e10d3870c",
+    "74f3b8491ee47905066704a239097d0ddc4fa5f1960fc4bd5fe4abe114ca8a25",
+    "44f6c63f70dc973234b616417c0500ebe18b830b50ccbfeb23ee6ea85e3205b6"
+  ],
+  "eventSetDigest": "0923732dccf06370ed9143a5aa0d573418296899ca01a4ac1263a6ffcb4b0481",
+  "testKeyPair": {
+    "privateKey": "9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60",
+    "note": "Test key only — never use in production"
+  },
+  "seed42Contract": {
+    "mission": {
+      "id": "a1b2c3d4-0000-4000-8000-000000000001",
+      "name": "Emergency Distribution Alpha",
+      "policyVersion": 0,
+      "totalStock": { "emergency_kit": 100 },
+      "tokenSalt": "seed42salt000000000000000000000000"
+    },
+    "policy": {
+      "items": [{ "type": "emergency_kit", "unit": "kit" }],
+      "allowances": [{ "itemType": "emergency_kit", "maxPerEntitlement": 1 }],
+      "tokenSalt": "seed42salt000000000000000000000000"
+    },
+    "devices": {
+      "alpha": {
+        "id": "a1b2c3d4-0000-4000-8000-aaa000000001",
+        "label": "Alpha",
+        "allocation": { "emergency_kit": 50 }
+      },
+      "bravo": {
+        "id": "a1b2c3d4-0000-4000-8000-bbb000000002",
+        "label": "Bravo",
+        "allocation": { "emergency_kit": 50 }
+      }
+    },
+    "events": [
+      {
+        "id": "e0e0e0e0-0000-4000-8000-000000000001",
+        "deviceId": "a1b2c3d4-0000-4000-8000-aaa000000001",
+        "sequence": 0,
+        "tokenRaw": "HH-040",
+        "itemType": "emergency_kit",
+        "quantity": 1,
+        "deviceTime": "2026-08-22T10:00:00.000Z",
+        "previousHash": "GENESIS"
+      },
+      {
+        "id": "e0e0e0e0-0000-4000-8000-000000000002",
+        "deviceId": "a1b2c3d4-0000-4000-8000-aaa000000001",
+        "sequence": 1,
+        "tokenRaw": "HH-042",
+        "itemType": "emergency_kit",
+        "quantity": 1,
+        "deviceTime": "2026-08-22T10:01:00.000Z"
+      },
+      {
+        "id": "e0e0e0e0-0000-4000-8000-000000000003",
+        "deviceId": "a1b2c3d4-0000-4000-8000-bbb000000002",
+        "sequence": 0,
+        "tokenRaw": "HH-041",
+        "itemType": "emergency_kit",
+        "quantity": 1,
+        "deviceTime": "2026-08-22T10:02:00.000Z",
+        "previousHash": "GENESIS"
+      },
+      {
+        "id": "e0e0e0e0-0000-4000-8000-000000000004",
+        "deviceId": "a1b2c3d4-0000-4000-8000-bbb000000002",
+        "sequence": 1,
+        "tokenRaw": "HH-042",
+        "itemType": "emergency_kit",
+        "quantity": 1,
+        "deviceTime": "2026-08-22T10:03:00.000Z"
+      }
+    ],
+    "expectedResult": {
+      "summary": {
+        "missionId": "a1b2c3d4-0000-4000-8000-000000000001",
+        "initialStock": { "emergency_kit": 100 },
+        "distributed": { "emergency_kit": 4 },
+        "remaining": { "emergency_kit": 96 },
+        "uniqueTokensServed": 3,
+        "totalPhysicalHandouts": 4
+      },
+      "exceptionCount": 1,
+      "exceptionType": "duplicate_entitlement",
+      "exceptionTokenRaw": "HH-042",
+      "exceptionEventCount": 2,
+      "exceptionDeviceCount": 2
+    }
+  }
+}
