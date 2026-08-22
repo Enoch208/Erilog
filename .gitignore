@@ -51,3 +51,4 @@ docker-compose.override.yml
 # Temporary
 tmp/
 .tmp/
+apps/web/tsconfig.tsbuildinfo
