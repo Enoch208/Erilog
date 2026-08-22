@@ -4,17 +4,29 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "echo 'web build deferred - VISUAL-REFERENCE-REQUIRED'",
+    "build": "next build",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "lint": "tsc --noEmit"
+    "lint": "tsc --noEmit",
+    "dev": "next dev"
   },
   "dependencies": {
+    "@erilog/crypto": "workspace:*",
     "@erilog/reconcile": "workspace:*",
     "@erilog/schemas": "workspace:*",
-    "@erilog/crypto": "workspace:*"
+    "@hugeicons/core-free-icons": "4.3.0",
+    "@hugeicons/react": "1.1.10",
+    "autoprefixer": "10.4.21",
+    "geist": "1.3.1",
+    "next": "16.3.2",
+    "postcss": "8.5.4",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "tailwindcss": "3.4.17"
   },
   "devDependencies": {
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.4",
     "typescript": "5.8.3",
     "vitest": "3.2.3"
   }

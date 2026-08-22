@@ -1,0 +1,58 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --erilog-canvas: #F1F2EE;
+  --erilog-surface: #FEFEFC;
+  --erilog-ink: #151816;
+  --erilog-muted: #69716C;
+  --erilog-border: #DDE4DF;
+  --erilog-mint: #18B889;
+  --erilog-mint-dark: #0E5C47;
+  --erilog-mint-wash: #DCF7EC;
+  --erilog-amber: #B86B00;
+  --erilog-red: #C73F46;
+  --erilog-evidence: #0D1310;
+}
+
+@layer base {
+  body {
+    @apply bg-canvas text-ink antialiased;
+  }
+
+  /* Ensure reduced motion users get static layout */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  .section-container {
+    @apply max-w-[1240px] mx-auto px-6;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 
+           bg-ink text-white rounded-control font-medium text-sm
+           transition-transform duration-150
+           hover:scale-[1.02] active:scale-[0.98]
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint focus-visible:ring-offset-2;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3
+           bg-surface text-ink border border-border rounded-control font-medium text-sm
+           transition-transform duration-150
+           hover:scale-[1.02] active:scale-[0.98]
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint focus-visible:ring-offset-2;
+  }
+
+  .mono {
+    font-family: var(--font-geist-mono);
+  }
+}
