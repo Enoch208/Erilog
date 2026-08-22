@@ -1,0 +1,29 @@
+{
+  "name": "@erilog/verifier",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc --project tsconfig.json",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "lint": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@erilog/reconcile": "workspace:*",
+    "@erilog/schemas": "workspace:*",
+    "@erilog/crypto": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "5.8.3",
+    "vitest": "3.2.3"
+  }
+}
