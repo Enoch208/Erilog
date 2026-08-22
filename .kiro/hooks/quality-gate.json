@@ -1,0 +1,16 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Quality Gate on TypeScript Save",
+      "trigger": "PostFileSave",
+      "description": "Runs typecheck and tests for affected packages when TypeScript files are saved",
+      "matcher": "\\.(ts|tsx)$",
+      "action": {
+        "type": "command",
+        "command": "cd /Users/enoch/Developer/personal/Erilog && pnpm turbo typecheck test --affected 2>&1 | tail -20",
+        "timeout": 120
+      }
+    }
+  ]
+}
