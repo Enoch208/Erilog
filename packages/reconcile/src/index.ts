@@ -6,6 +6,11 @@ export {
   detectEventOverspend,
   detectDeviceOverspend,
 } from './exceptions.js';
+export {
+  processSync,
+  createSyncEngineState,
+} from './sync-engine.js';
+export { generateBundle } from './bundle.js';
 export type {
   ReconciliationInput,
   ReconciliationResult,
@@ -13,3 +18,9 @@ export type {
   ExceptionRecord,
   ExceptionType,
 } from './types.js';
+export type {
+  SyncResultItem,
+  MissionState,
+  SyncEngineState,
+} from './sync-engine.js';
+export type { BundleInput, BundleOutput } from './bundle.js';

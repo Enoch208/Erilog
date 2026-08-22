@@ -118,6 +118,9 @@ importers:
       '@erilog/schemas':
         specifier: workspace:*
         version: link:../packages/schemas
+      '@erilog/verifier':
+        specifier: workspace:*
+        version: link:../apps/verifier
     devDependencies:
       tsx:
         specifier: 4.19.4

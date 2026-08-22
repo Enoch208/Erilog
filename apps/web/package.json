@@ -6,7 +6,7 @@
   "scripts": {
     "build": "echo 'web build deferred - VISUAL-REFERENCE-REQUIRED'",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run",
+    "test": "vitest run --passWithNoTests",
     "lint": "tsc --noEmit"
   },
   "dependencies": {

@@ -6,7 +6,8 @@
   "dependencies": {
     "@erilog/reconcile": "workspace:*",
     "@erilog/schemas": "workspace:*",
-    "@erilog/crypto": "workspace:*"
+    "@erilog/crypto": "workspace:*",
+    "@erilog/verifier": "workspace:*"
   },
   "devDependencies": {
     "typescript": "5.8.3",

@@ -1,3 +1,2 @@
-// Verifier core — will be implemented in Task 6.2
-export { verifyBundle } from './verifier.js';
-export { tamperBundle } from './tamper-lab.js';
+export { verifyBundle, type VerificationResult, type VerificationFailure, type BundleFiles } from './verifier.js';
+export { runTamperLab, applyQuantityMutation, type TamperResult, type QuantityMutation } from './tamper-lab.js';
