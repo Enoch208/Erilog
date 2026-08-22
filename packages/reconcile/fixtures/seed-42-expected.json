@@ -1,0 +1,41 @@
+{
+  "summary": {
+    "missionId": "a1b2c3d4-0000-4000-8000-000000000001",
+    "initialStock": {
+      "emergency_kit": 100
+    },
+    "distributed": {
+      "emergency_kit": 4
+    },
+    "remaining": {
+      "emergency_kit": 96
+    },
+    "uniqueTokensServed": 3,
+    "totalPhysicalHandouts": 4
+  },
+  "exceptions": [
+    {
+      "id": "a0d4e1a59de0959cc8c6191d7bb1395cec2ac01961695e6f5ac6ec95dd847573",
+      "type": "duplicate_entitlement",
+      "tokenHash": "876d16c5a9a59b4f1aec3886a57541610b283f1e03d9f4f75ad3b6103f4f4d12",
+      "eventIds": [
+        "e0e0e0e0-0000-4000-8000-000000000002",
+        "e0e0e0e0-0000-4000-8000-000000000004"
+      ],
+      "deviceIds": [
+        "a1b2c3d4-0000-4000-8000-aaa000000001",
+        "a1b2c3d4-0000-4000-8000-bbb000000002"
+      ],
+      "quantities": [
+        1,
+        1
+      ],
+      "timestamps": [
+        "2026-08-22T10:01:00.000Z",
+        "2026-08-22T10:03:00.000Z"
+      ],
+      "status": "unresolved"
+    }
+  ],
+  "eventSetDigest": "0923732dccf06370ed9143a5aa0d573418296899ca01a4ac1263a6ffcb4b0481"
+}
