@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_USER: erilog
+          POSTGRES_PASSWORD: erilog_dev
+          POSTGRES_DB: erilog
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U erilog"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 5
+
+    env:
+      DATABASE_URL: postgresql://erilog:erilog_dev@localhost:5432/erilog
+      ERILOG_SIGNING_PRIVATE_KEY: 9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies (frozen lockfile)
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm turbo typecheck
+
+      - name: Unit tests
+        run: pnpm turbo test
+
+      - name: Build
+        run: pnpm turbo build
+
+      - name: Headless demo
+        run: pnpm demo:headless

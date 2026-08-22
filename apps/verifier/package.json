@@ -18,11 +18,16 @@
     "lint": "tsc --noEmit"
   },
   "dependencies": {
+    "@erilog/crypto": "workspace:*",
     "@erilog/reconcile": "workspace:*",
     "@erilog/schemas": "workspace:*",
-    "@erilog/crypto": "workspace:*"
+    "yauzl-promise": "4.0.0"
   },
   "devDependencies": {
+    "@types/archiver": "6.0.3",
+    "@types/node": "22.15.32",
+    "@types/yauzl-promise": "4.0.1",
+    "archiver": "7.0.1",
     "typescript": "5.8.3",
     "vitest": "3.2.3"
   }

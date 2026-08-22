@@ -4,6 +4,5 @@ export default defineConfig({
   test: {
     globals: false,
     environment: 'node',
-    passWithNoTests: true,
   },
 });

@@ -301,22 +301,30 @@ async function step7_generateBundle(
     exportedAt: '2026-08-22T12:00:00.000Z',
   });
 
-  console.log(`  Files: ${Object.keys(bundle.files).join(', ')}`);
-  console.log(`  Signature: ${bundle.signature.slice(0, 24)}...`);
+  // Write to a REAL ZIP file on disk
+  const { writeBundleToZip } = await import('@erilog/reconcile');
+  const { readArchive } = await import('@erilog/verifier');
+  const { readFileSync, mkdirSync } = await import('node:fs');
+  const { resolve: pathResolve } = await import('node:path');
+
+  const outDir = pathResolve(__dirname, '../tmp');
+  mkdirSync(outDir, { recursive: true });
+  const zipPath = pathResolve(outDir, 'seed-42-bundle.zip');
+
+  const { path: writtenPath, sizeBytes } = await writeBundleToZip(bundle, zipPath);
+  console.log(`  Written ZIP: ${writtenPath} (${sizeBytes} bytes)`);
+  console.log(`  Files in bundle: ${Object.keys(bundle.files).join(', ')}, signature.bin`);
   console.log(`  Manifest keyId: ${bundle.manifest.keyId.slice(0, 16)}...`);
   console.log(`  Manifest eventSetDigest: ${bundle.manifest.eventSetDigest.slice(0, 16)}...`);
-  console.log(`  ✓ Bundle generated and signed\n`);
 
-  // Return as BundleFiles for verifier
-  const bundleFiles: BundleFiles = {
-    'manifest.json': bundle.files['manifest.json']!,
-    'policy.json': bundle.files['policy.json']!,
-    'events.json': bundle.files['events.json']!,
-    'summary.json': bundle.files['summary.json']!,
-    signature: bundle.signature,
-  };
+  // Read the ZIP back through the REAL archive parser (not passing JS objects)
+  const zipBytes = readFileSync(writtenPath);
+  const parsedFiles = await readArchive(zipBytes);
 
-  return bundleFiles;
+  console.log(`  ✓ Bundle written to disk and re-read through archive parser`);
+  console.log(`  ✓ Archive safety checks passed (file count, size, paths)\n`);
+
+  return parsedFiles;
 }
 
 // ═══════════════════════════════════════════════════════════════════

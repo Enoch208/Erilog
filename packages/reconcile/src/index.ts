@@ -11,6 +11,7 @@ export {
   createSyncEngineState,
 } from './sync-engine.js';
 export { generateBundle } from './bundle.js';
+export { writeBundleToZip, writeBundleToBuffer } from './archive.js';
 export type {
   ReconciliationInput,
   ReconciliationResult,
