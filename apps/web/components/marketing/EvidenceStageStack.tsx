@@ -2,41 +2,52 @@ import { STAGES } from '@/lib/content';
 
 export function EvidenceStageStack() {
   return (
-    <section className="py-24 sm:py-32 bg-surface border-y border-border">
-      <div className="section-container">
-        <div className="max-w-[720px] mx-auto text-center mb-16">
-          <h2 className="text-3xl sm:text-4xl font-heading tracking-tight mb-4">
-            Three steps. One guarantee.
+    <section className="border-y border-border bg-surface py-28">
+      <div className="mx-auto max-w-wide px-6">
+        <div className="mx-auto max-w-narrow text-center">
+          <p className="eyebrow">How it works</p>
+          <h2 className="mt-4 text-3xl font-heading tracking-tight sm:text-[2.75rem] sm:leading-[1.1]">
+            Three steps.
+            <br />
+            <span className="text-muted">One guarantee.</span>
           </h2>
-          <p className="text-muted">
-            From offline recording to independently verified evidence.
-          </p>
         </div>
 
-        <div className="space-y-8 max-w-[900px] mx-auto">
-          {STAGES.map((stage) => (
-            <div
+        <div className="mx-auto mt-16 max-w-content space-y-5">
+          {STAGES.map((stage, i) => (
+            <article
               key={stage.number}
-              className="rounded-feature border border-border bg-canvas p-8 sm:p-10 lg:sticky lg:top-24"
-              style={{ zIndex: parseInt(stage.number, 10) }}
+              className="grid gap-8 rounded-feature border border-border bg-canvas p-8 sm:p-12 lg:grid-cols-[auto_1fr] lg:gap-12"
             >
-              <div className="flex flex-col lg:flex-row lg:items-start gap-6">
-                <div className="flex-shrink-0">
-                  <span className="text-5xl font-heading text-border select-none">
-                    {stage.number}
+              {/* Number */}
+              <div className="lg:w-24">
+                <span
+                  className="mono block text-[3.5rem] font-heading leading-none text-border"
+                  aria-hidden="true"
+                >
+                  {stage.number}
+                </span>
+              </div>
+
+              {/* Content */}
+              <div className="max-w-prose">
+                <h3 className="text-xl font-heading sm:text-2xl">
+                  {stage.title}
+                </h3>
+                <p className="mt-4 text-base leading-relaxed text-muted">
+                  {stage.description}
+                </p>
+                <div className="mt-6 inline-flex items-center gap-2 rounded-control border border-mint/25 bg-mint-wash px-3.5 py-2">
+                  <span
+                    className="h-1 w-1 rounded-full bg-mint"
+                    aria-hidden="true"
+                  />
+                  <span className="mono text-[11px] text-mint-dark">
+                    {stage.detail}
                   </span>
                 </div>
-                <div className="flex-1">
-                  <h3 className="text-xl font-heading mb-3">{stage.title}</h3>
-                  <p className="text-muted leading-relaxed mb-4">
-                    {stage.description}
-                  </p>
-                  <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-control bg-mint-wash text-mint-dark text-xs mono">
-                    {stage.detail}
-                  </div>
-                </div>
               </div>
-            </div>
+            </article>
           ))}
         </div>
       </div>

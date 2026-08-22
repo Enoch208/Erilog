@@ -3,62 +3,103 @@ import { SEED_42, ROUTES } from '@/lib/content';
 
 export function CoordinatorPreview() {
   return (
-    <section className="bg-surface border-y border-border py-24 sm:py-32">
-      <div className="section-container grid lg:grid-cols-2 gap-12 items-center">
-        {/* Marketing preview — clearly labelled */}
+    <section className="border-y border-border bg-surface py-28">
+      <div className="mx-auto grid max-w-wide items-center gap-14 px-6 lg:grid-cols-2 lg:gap-20">
+        {/* Dashboard preview */}
         <div className="relative order-2 lg:order-1">
-          <div className="absolute -top-3 left-4 text-[10px] font-medium text-muted bg-surface px-2 py-0.5 rounded border border-border z-10">
-            Marketing preview
+          <div className="absolute -top-2.5 left-6 z-10 rounded-full border border-border bg-surface px-2.5 py-1">
+            <span className="mono text-[9px] uppercase tracking-wider text-muted">
+              Marketing preview
+            </span>
           </div>
-          <div className="rounded-card-lg border border-border bg-canvas p-6">
-            <div className="flex items-center justify-between mb-6">
-              <span className="text-sm font-heading">Mission Summary</span>
-              <span className="text-xs text-muted mono">seed-42</span>
+
+          <div className="rounded-feature border border-border bg-canvas p-7">
+            <div className="mb-6 flex items-center justify-between">
+              <p className="text-[13px] font-heading">Mission summary</p>
+              <span className="mono text-[10px] text-muted">seed-42</span>
             </div>
 
-            <div className="grid grid-cols-3 gap-4 mb-6">
-              <div className="text-center p-3 rounded-control bg-surface border border-border">
-                <div className="text-2xl font-heading">{SEED_42.result.distributed}</div>
-                <div className="text-[10px] text-muted">distributed</div>
-              </div>
-              <div className="text-center p-3 rounded-control bg-surface border border-border">
-                <div className="text-2xl font-heading">{SEED_42.result.remaining}</div>
-                <div className="text-[10px] text-muted">remaining</div>
-              </div>
-              <div className="text-center p-3 rounded-control bg-surface border border-border">
-                <div className="text-2xl font-heading text-amber">{SEED_42.result.exceptions}</div>
-                <div className="text-[10px] text-muted">exception</div>
-              </div>
+            {/* Stats */}
+            <div className="mb-5 grid grid-cols-3 gap-3">
+              {[
+                { v: SEED_42.result.distributed, l: 'handed out' },
+                { v: SEED_42.result.remaining, l: 'remaining' },
+                {
+                  v: SEED_42.result.exceptions,
+                  l: 'exception',
+                  accent: true,
+                },
+              ].map((s) => (
+                <div
+                  key={s.l}
+                  className="rounded-control border border-border bg-surface px-3 py-4 text-center"
+                >
+                  <div
+                    className={`font-heading text-[26px] leading-none tabular-nums ${
+                      s.accent ? 'text-amber' : 'text-ink'
+                    }`}
+                  >
+                    {s.v}
+                  </div>
+                  <div className="mono mt-2 text-[9px] uppercase tracking-wider text-muted">
+                    {s.l}
+                  </div>
+                </div>
+              ))}
             </div>
 
-            <div className="rounded-control border border-amber/30 bg-[#FFF8F0] p-3">
-              <div className="flex items-center gap-2 mb-1">
-                <span className="text-xs font-medium text-amber">Duplicate entitlement</span>
-              </div>
-              <div className="text-xs text-muted mono">
-                {SEED_42.conflictToken} · 2 peer events · unresolved
-              </div>
-              <div className="text-[10px] text-muted mt-1">
+            {/* Device sync rows */}
+            <div className="mb-5 space-y-1.5">
+              {[SEED_42.devices.alpha, SEED_42.devices.bravo].map((d) => (
+                <div
+                  key={d.label}
+                  className="flex items-center justify-between rounded-control border border-border bg-surface px-3.5 py-2.5"
+                >
+                  <span className="mono text-[11px] text-muted">
+                    Device {d.label}
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <span className="h-1 w-1 rounded-full bg-mint" />
+                    <span className="text-[10px] font-medium text-mint-dark">
+                      2 events synced
+                    </span>
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            {/* Exception */}
+            <div className="rounded-control border-l-2 border-amber bg-amber/[0.06] px-4 py-3.5">
+              <p className="mono text-[10px] uppercase tracking-wider text-amber">
+                duplicate_entitlement
+              </p>
+              <p className="mono mt-1.5 text-[11px] text-ink">
+                {SEED_42.conflictToken} ·{' '}
+                {SEED_42.result.exceptionPeerCount} peer events · unresolved
+              </p>
+              <p className="mt-2 text-[10px] text-muted">
                 No winner selected — both events preserved
-              </div>
+              </p>
             </div>
           </div>
         </div>
 
-        <div className="order-1 lg:order-2">
-          <p className="text-xs font-medium text-muted uppercase tracking-wide mb-4">
-            Coordination
-          </p>
-          <h2 className="text-3xl sm:text-4xl font-heading tracking-tight mb-6">
-            See what happened. Not what you hoped.
+        {/* Copy */}
+        <div className="order-1 max-w-prose lg:order-2">
+          <p className="eyebrow">Coordination</p>
+          <h2 className="mt-4 text-3xl font-heading tracking-tight sm:text-[2.5rem] sm:leading-[1.1]">
+            See what happened.
+            <br />
+            <span className="text-muted">Not what you hoped.</span>
           </h2>
-          <p className="text-muted leading-relaxed mb-6">
-            Physical stock accounting, device synchronization status,
-            explicit exceptions, and exportable evidence.
-            Every number traces back to immutable events.
+          <p className="mt-6 text-base leading-relaxed text-muted">
+            Physical stock accounting, device synchronization status, explicit
+            exceptions, and exportable evidence. Every number traces back to
+            immutable events.
           </p>
-          <Link href={ROUTES.judge} className="btn-primary text-sm">
+          <Link href={ROUTES.judge} className="btn-primary mt-8">
             Open Judge Dashboard
+            <span aria-hidden="true">→</span>
           </Link>
         </div>
       </div>

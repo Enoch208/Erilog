@@ -17,24 +17,29 @@ export function MarketingHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 bg-canvas/95 backdrop-blur-sm border-b border-border">
-      <div className="section-container flex items-center justify-between h-16">
+    <header className="sticky top-0 z-50 border-b border-border/60 bg-canvas/80 backdrop-blur-md">
+      <div className="mx-auto flex h-16 max-w-wide items-center justify-between px-6">
         {/* Wordmark */}
         <Link
           href="/"
-          className="text-lg font-heading tracking-tight text-ink"
+          className="text-[17px] font-heading tracking-tight text-ink"
         >
           Erilog
         </Link>
 
-        {/* Desktop Nav */}
-        <nav className="hidden lg:flex items-center gap-8" aria-label="Main navigation">
+        {/* Desktop nav */}
+        <nav
+          className="hidden items-center gap-7 lg:flex"
+          aria-label="Main navigation"
+        >
           {NAV_ITEMS.map((item) => (
             <a
               key={item.label}
               href={item.href}
-              className="text-sm text-muted hover:text-ink transition-colors"
-              {...(item.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+              className="text-[13px] text-muted transition-colors hover:text-ink"
+              {...(item.external
+                ? { target: '_blank', rel: 'noopener noreferrer' }
+                : {})}
             >
               {item.label}
             </a>
@@ -44,15 +49,16 @@ export function MarketingHeader() {
         {/* Desktop CTA */}
         <Link
           href={ROUTES.judge}
-          className="hidden lg:inline-flex btn-primary text-sm py-2 px-4"
+          className="hidden rounded-full bg-evidence px-5 py-2.5 text-[13px] font-medium text-white transition-all duration-300 hover:scale-[1.02] active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint focus-visible:ring-offset-2 lg:inline-flex"
+          style={{ boxShadow: '0 6px 18px -6px rgba(13,19,16,.4)' }}
         >
           Open Dashboard
         </Link>
 
-        {/* Mobile Menu Button */}
+        {/* Mobile menu button — 44px touch target */}
         <button
           type="button"
-          className="lg:hidden p-2 -mr-2 text-ink"
+          className="-mr-2.5 flex h-11 w-11 items-center justify-center text-ink lg:hidden"
           onClick={() => setMenuOpen(!menuOpen)}
           aria-expanded={menuOpen}
           aria-controls="mobile-menu"
@@ -64,47 +70,51 @@ export function MarketingHeader() {
             viewBox="0 0 20 20"
             fill="none"
             stroke="currentColor"
-            strokeWidth="1.5"
+            strokeWidth="1.6"
             strokeLinecap="round"
+            aria-hidden="true"
           >
             {menuOpen ? (
               <>
-                <line x1="4" y1="4" x2="16" y2="16" />
-                <line x1="16" y1="4" x2="4" y2="16" />
+                <line x1="4.5" y1="4.5" x2="15.5" y2="15.5" />
+                <line x1="15.5" y1="4.5" x2="4.5" y2="15.5" />
               </>
             ) : (
               <>
-                <line x1="3" y1="6" x2="17" y2="6" />
-                <line x1="3" y1="10" x2="17" y2="10" />
-                <line x1="3" y1="14" x2="17" y2="14" />
+                <line x1="3" y1="6.5" x2="17" y2="6.5" />
+                <line x1="3" y1="13.5" x2="17" y2="13.5" />
               </>
             )}
           </svg>
         </button>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile menu */}
       {menuOpen && (
         <nav
           id="mobile-menu"
-          className="lg:hidden border-t border-border bg-canvas py-4"
+          className="border-t border-border bg-canvas lg:hidden"
           aria-label="Mobile navigation"
         >
-          <div className="section-container flex flex-col gap-3">
-            {NAV_ITEMS.map((item) => (
-              <a
-                key={item.label}
-                href={item.href}
-                className="text-sm text-muted hover:text-ink py-2 transition-colors"
-                onClick={() => setMenuOpen(false)}
-                {...(item.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-              >
-                {item.label}
-              </a>
-            ))}
+          <div className="mx-auto max-w-wide px-6 py-4">
+            <div className="flex flex-col">
+              {NAV_ITEMS.map((item) => (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  className="flex min-h-[44px] items-center text-sm text-muted transition-colors hover:text-ink"
+                  onClick={() => setMenuOpen(false)}
+                  {...(item.external
+                    ? { target: '_blank', rel: 'noopener noreferrer' }
+                    : {})}
+                >
+                  {item.label}
+                </a>
+              ))}
+            </div>
             <Link
               href={ROUTES.judge}
-              className="btn-primary text-sm mt-2 w-full"
+              className="btn-primary mt-4 w-full"
               onClick={() => setMenuOpen(false)}
             >
               Open Dashboard
