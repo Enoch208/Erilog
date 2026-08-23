@@ -25,7 +25,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html id="top" lang="en" className={`${GeistSans.variable} ${GeistMono.variable} ${caveat.variable}`}>
+    <html id="top" lang="en" data-scroll-behavior="smooth" className={`${GeistSans.variable} ${GeistMono.variable} ${caveat.variable}`}>
       <body className="font-sans">
         <ServiceWorkerRegistrar />
         {children}

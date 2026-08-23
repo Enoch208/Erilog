@@ -1,54 +1,96 @@
 /// <reference lib="webworker" />
 
-const CACHE_NAME = 'erilog-v1';
+const CACHE_NAME = 'erilog-v2';
 const PRECACHE_URLS = [
   '/',
   '/favicon.png',
+  '/logo.png',
   '/manifest.json',
 ];
 
-// Install: precache app shell
 self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(PRECACHE_URLS))
-  );
+  event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(PRECACHE_URLS)));
   self.skipWaiting();
 });
 
-// Activate: clean old caches
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) =>
-      Promise.all(keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k)))
-    )
+      Promise.all(
+        keys
+          .filter((key) => key.startsWith('erilog-') && key !== CACHE_NAME)
+          .map((key) => caches.delete(key)),
+      ),
+    ),
   );
   self.clients.claim();
 });
 
-// Fetch strategy:
-// - API routes: network-only (never cache mutable data)
-// - App shell/static assets: stale-while-revalidate
-self.addEventListener('fetch', (event) => {
-  const url = new URL(event.request.url);
+function isNextDataRequest(request, url) {
+  return request.headers.get('RSC') === '1'
+    || request.headers.has('Next-Router-State-Tree')
+    || request.headers.has('Next-Router-Prefetch')
+    || url.searchParams.has('_rsc');
+}
 
-  // Network-only for API calls and sync
-  if (url.pathname.startsWith('/api/')) {
-    event.respondWith(fetch(event.request));
+async function networkFirstLanding(request) {
+  const cache = await caches.open(CACHE_NAME);
+
+  try {
+    const response = await fetch(request);
+    if (response.ok) await cache.put('/', response.clone());
+    return response;
+  } catch (error) {
+    const cached = await cache.match('/');
+    if (cached) return cached;
+    throw error;
+  }
+}
+
+async function staleWhileRevalidate(request) {
+  const cache = await caches.open(CACHE_NAME);
+  const cached = await cache.match(request);
+  const network = fetch(request).then(async (response) => {
+    if (response.ok && response.type === 'basic') {
+      await cache.put(request, response.clone());
+    }
+    return response;
+  });
+
+  if (cached) {
+    void network.catch(() => undefined);
+    return cached;
+  }
+
+  return network;
+}
+
+self.addEventListener('fetch', (event) => {
+  const { request } = event;
+  const url = new URL(request.url);
+
+  if (request.method !== 'GET' || url.origin !== self.location.origin) return;
+
+  // Session, API, and React Server Component responses must always come from
+  // the network. Caching them can replay stale auth or hydration payloads.
+  if (
+    url.pathname.startsWith('/api/')
+    || url.pathname.startsWith('/judge')
+    || isNextDataRequest(request, url)
+  ) {
     return;
   }
 
-  // Stale-while-revalidate for everything else
-  event.respondWith(
-    caches.open(CACHE_NAME).then(async (cache) => {
-      const cached = await cache.match(event.request);
-      const fetched = fetch(event.request).then((response) => {
-        if (response.ok) {
-          cache.put(event.request, response.clone());
-        }
-        return response;
-      }).catch(() => cached);
+  if (request.mode === 'navigate') {
+    if (url.pathname === '/') event.respondWith(networkFirstLanding(request));
+    return;
+  }
 
-      return cached || fetched;
-    })
-  );
+  const cacheableStaticAsset = url.pathname.startsWith('/_next/static/')
+    || ['font', 'image', 'script', 'style'].includes(request.destination)
+    || PRECACHE_URLS.includes(url.pathname);
+
+  if (cacheableStaticAsset) {
+    event.respondWith(staleWhileRevalidate(request));
+  }
 });
