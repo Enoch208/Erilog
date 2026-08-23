@@ -2,7 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { eq } from 'drizzle-orm';
 import { db } from '@/lib/server/db';
 import { missions, policyVersions, devices, events, reconciliationSnapshots } from '@/lib/server/schema';
-import { createSession } from '@/lib/server/session';
+import { createSession, validateSession } from '@/lib/server/session';
+
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 const SEED_42_MISSION = {
   id: 'a1b2c3d4-0000-4000-8000-000000000001',
@@ -30,45 +33,42 @@ async function sha256Hex(data: string): Promise<string> {
 }
 
 async function seedMission(): Promise<string> {
-  // Check if mission already exists
-  const [existing] = await db
-    .select()
-    .from(missions)
-    .where(eq(missions.id, SEED_42_MISSION.id));
-
-  if (existing) {
-    return existing.id;
-  }
-
-  // Create mission
-  await db.insert(missions).values({
-    id: SEED_42_MISSION.id,
-    name: SEED_42_MISSION.name,
-    status: 'active',
-    totalStock: SEED_42_MISSION.totalStock,
-    activatedAt: new Date(),
-  });
-
-  // Create policy version
   const policyHash = await sha256Hex(JSON.stringify(SEED_42_POLICY));
-  await db.insert(policyVersions).values({
-    missionId: SEED_42_MISSION.id,
-    version: 0,
-    policy: SEED_42_POLICY,
-    policyHash,
-    activatedAt: new Date(),
-  });
 
-  // Create devices
-  for (const device of SEED_42_DEVICES) {
-    await db.insert(devices).values({
-      id: device.id,
-      missionId: SEED_42_MISSION.id,
-      label: device.label,
-      allocation: device.allocation,
-      provisionedAt: new Date(),
-    });
-  }
+  await db.transaction(async (tx) => {
+    await tx
+      .insert(missions)
+      .values({
+        id: SEED_42_MISSION.id,
+        name: SEED_42_MISSION.name,
+        status: 'active',
+        totalStock: SEED_42_MISSION.totalStock,
+        activatedAt: new Date(),
+      })
+      .onConflictDoNothing();
+
+    await tx
+      .insert(policyVersions)
+      .values({
+        missionId: SEED_42_MISSION.id,
+        version: 0,
+        policy: SEED_42_POLICY,
+        policyHash,
+        activatedAt: new Date(),
+      })
+      .onConflictDoNothing();
+
+    await tx
+      .insert(devices)
+      .values(SEED_42_DEVICES.map((device) => ({
+        id: device.id,
+        missionId: SEED_42_MISSION.id,
+        label: device.label,
+        allocation: device.allocation,
+        provisionedAt: new Date(),
+      })))
+      .onConflictDoNothing();
+  });
 
   return SEED_42_MISSION.id;
 }
@@ -85,10 +85,13 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// Reset endpoint for a session
 export async function DELETE() {
   try {
-    // Delete events and snapshots for the seed mission
+    const session = await validateSession();
+    if (!session.valid || session.missionId !== SEED_42_MISSION.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     await db.delete(reconciliationSnapshots).where(eq(reconciliationSnapshots.missionId, SEED_42_MISSION.id));
     await db.delete(events).where(eq(events.missionId, SEED_42_MISSION.id));
 

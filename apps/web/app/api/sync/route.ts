@@ -7,6 +7,9 @@ import { events, devices, policyVersions } from '@/lib/server/schema';
 import { validateSession } from '@/lib/server/session';
 import { runReconciliation } from '@/lib/server/reconcile-runner';
 
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: NextRequest) {
   // 1. Auth gate
   const session = await validateSession();

@@ -4,6 +4,9 @@ import { db } from '@/lib/server/db';
 import { missions, policyVersions, devices, events, reconciliationSnapshots } from '@/lib/server/schema';
 import { validateSession } from '@/lib/server/session';
 
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   const session = await validateSession();
   if (!session.valid || !session.missionId) {
