@@ -24,11 +24,37 @@ Erilog preserves every recorded handout, reconciles disconnected field devices d
 
 **Core guarantee: conflicts cannot disappear.**
 
-[Run the proof](#run-the-deterministic-proof) · [Open Judge Mode](#run-judge-mode) · [Architecture](#architecture) · [Implementation status](#implementation-status)
+[See it working](#product-proof) · [Run the proof](#run-the-deterministic-proof) · [Open Judge Mode](#run-judge-mode) · [Architecture](#architecture)
 
 </div>
 
 ---
+
+## Product proof
+
+These are direct captures from the working Judge Mode—not interface mockups. The flow uses the repository's synthetic seed-42 mission and the same browser, offline queue, sync API, reconciliation engine, and PostgreSQL state documented below.
+
+### 01 — Record while the network is unavailable
+
+<div align="center">
+
+<img src="docs/assets/judge-offline-operator.png" alt="Erilog Operator Alpha recording two physical handouts while offline" width="100%" />
+
+</div>
+
+Device Alpha is offline with **2 events retained in its append-only IndexedDB queue**, local stock reduced from 50 to 48, and zero events represented as server-accepted. The interface explicitly keeps the local receipt provisional.
+
+### 02 — Reconcile every physical handout
+
+<div align="center">
+
+<img src="docs/assets/judge-reconciliation.png" alt="Erilog coordinator showing four accepted handouts and one duplicate-entitlement exception" width="100%" />
+
+</div>
+
+After both devices reconnect, the coordinator shows the complete reference state: **4 distributed**, **96 remaining**, **3 unique tokens**, and **1 unresolved exception** joining two peer events across two devices. All four immutable events remain in the evidence ledger, and the signed audit bundle is ready to export.
+
+> The shared `HH-042` entitlement is surfaced as `duplicate_entitlement`; neither event is hidden or retroactively declared the winner.
 
 ## Why Erilog exists
 
@@ -44,6 +70,7 @@ The result is an evidence trail designed around three properties:
 
 ## Table of contents
 
+- [Product proof](#product-proof)
 - [Run the deterministic proof](#run-the-deterministic-proof)
 - [Run Judge Mode](#run-judge-mode)
 - [Seed-42 contract](#seed-42-contract)
