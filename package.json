@@ -9,7 +9,8 @@
     "test:integration": "echo 'Integration tests require PostgreSQL — run docker compose up first'",
     "typecheck": "turbo run typecheck",
     "lint": "turbo run typecheck",
-    "demo:headless": "tsx scripts/demo-headless.ts"
+    "demo:headless": "tsx scripts/demo-headless.ts",
+    "db:setup": "docker compose exec -T db psql -v ON_ERROR_STOP=1 -U erilog -d erilog < drizzle/0001_schema.sql"
   },
   "devDependencies": {
     "turbo": "2.5.4",

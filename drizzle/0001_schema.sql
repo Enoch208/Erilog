@@ -1,6 +1,16 @@
 -- Erilog Database Schema
 -- Designed per: .kiro/specs/erilog-core/design.md Section 2
 
+-- Application role used by the immutability grants below. The Docker development
+-- database user is a superuser and can create this no-login role on first setup.
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'app_role') THEN
+    CREATE ROLE app_role NOLOGIN;
+  END IF;
+END
+$$;
+
 -- 1. Missions
 CREATE TABLE missions (
   id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
