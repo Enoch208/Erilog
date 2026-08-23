@@ -1,12 +1,17 @@
 -- Erilog Database Schema
 -- Designed per: .kiro/specs/erilog-core/design.md Section 2
 
--- Application role used by the immutability grants below. The Docker development
--- database user is a superuser and can create this no-login role on first setup.
+-- Application role used by the immutability grants below. Local PostgreSQL
+-- creates it; managed providers that restrict role creation skip it safely.
 DO $$
 BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'app_role') THEN
-    CREATE ROLE app_role NOLOGIN;
+    BEGIN
+      CREATE ROLE app_role NOLOGIN;
+    EXCEPTION
+      WHEN insufficient_privilege THEN
+        RAISE NOTICE 'Skipping app_role creation: current user cannot create roles';
+    END;
   END IF;
 END
 $$;
@@ -100,8 +105,16 @@ CREATE TABLE judge_sessions (
   created_at      TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
--- Immutability enforcement
-REVOKE UPDATE, DELETE ON policy_versions FROM app_role;
-REVOKE UPDATE, DELETE ON events FROM app_role;
-REVOKE UPDATE, DELETE ON resolutions FROM app_role;
-REVOKE UPDATE, DELETE ON reconciliation_snapshots FROM app_role;
+-- Immutability enforcement when the deployment has provisioned app_role.
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'app_role') THEN
+    EXECUTE 'REVOKE UPDATE, DELETE ON policy_versions FROM app_role';
+    EXECUTE 'REVOKE UPDATE, DELETE ON events FROM app_role';
+    EXECUTE 'REVOKE UPDATE, DELETE ON resolutions FROM app_role';
+    EXECUTE 'REVOKE UPDATE, DELETE ON reconciliation_snapshots FROM app_role';
+  ELSE
+    RAISE NOTICE 'Skipping app_role immutability grants: role is unavailable';
+  END IF;
+END
+$$;
