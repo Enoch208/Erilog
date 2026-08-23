@@ -8,7 +8,7 @@ export function IntegrityStrip() {
         <div className="flex flex-wrap items-start justify-center gap-x-10 gap-y-6 lg:flex-nowrap lg:justify-between">
           {TRUST_CLAIMS.map((claim, index) => (
             <div key={claim.label} className="group flex max-w-[245px] items-start gap-3">
-              <span className="mono mt-0.5 text-[10px] text-mint">0{index + 1}</span>
+              <span className="mono mt-0.5 text-[10px] text-mint-dark">0{index + 1}</span>
               <div>
                 <p className="text-sm font-heading leading-snug text-ink transition-colors group-hover:text-mint-dark">{claim.label}</p>
                 <p className="mt-1.5 text-xs leading-relaxed text-muted">{claim.description}</p>

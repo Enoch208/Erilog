@@ -45,13 +45,13 @@ export function MarketingHero() {
                 EVIDENCE
               </span>
             </Word>{' '}
-            <span className="text-mint">
+            <span className="text-mint-display">
               <Word delay={0.12}>Reconciliation</Word>
             </span>
           </span>
 
           <span className="mt-1 block text-[2.8rem] tracking-tight sm:text-7xl lg:text-[5.5rem]">
-            <span className="text-[#9a9a9a]">
+            <span className="text-[#828282]">
               <Word delay={0.24}>from</Word>
             </span>{' '}
             <Word delay={0.3}>Real</Word>{' '}
@@ -59,7 +59,7 @@ export function MarketingHero() {
           </span>
 
           <span className="mt-1 block text-[2.8rem] tracking-tight sm:text-7xl lg:text-[5.5rem]">
-            <span className="text-[#9a9a9a]">
+            <span className="text-[#828282]">
               <Word delay={0.42}>ready</Word>{' '}
               <Word delay={0.48}>to</Word>
             </span>{' '}
@@ -76,12 +76,20 @@ export function MarketingHero() {
             Launch Judge Mode
             <span className="text-base transition-transform group-hover:translate-x-0.5" aria-hidden="true">→</span>
           </Link>
-          <Link href={ROUTES.verify} className="btn-secondary cursor-pointer bg-white/60 hover:bg-white hover:shadow-lg hover:shadow-black/10 active:scale-[0.98]">
-            Verify a bundle
+          <Link
+            href={ROUTES.verify}
+            className="group inline-flex cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-mint bg-mint-wash px-6 py-3.5 text-sm font-medium text-mint-dark transition-all duration-300 hover:-translate-y-0.5 hover:bg-mint hover:text-white hover:shadow-2xl hover:shadow-mint/30 active:translate-y-0 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint focus-visible:ring-offset-2"
+          >
+            Verify a bundle in your browser
+            <span className="text-base transition-transform group-hover:translate-x-0.5" aria-hidden="true">→</span>
           </Link>
         </div>
 
-        <p className="mt-12 text-xl text-mint sm:text-2xl" style={{ fontFamily: 'var(--font-caveat), cursive' }}>
+        <p className="mono mx-auto mt-4 max-w-md text-[11px] leading-relaxed text-muted">
+          Both open instantly. No signup, no login, nothing to install.
+        </p>
+
+        <p className="mt-12 text-xl text-mint-dark sm:text-2xl" style={{ fontFamily: 'var(--font-caveat), cursive' }}>
           ( from conflict to evidence )
         </p>
       </section>

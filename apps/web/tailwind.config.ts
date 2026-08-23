@@ -18,14 +18,23 @@ const config: Config = {
         canvas: '#F1F2EE',
         surface: '#FEFEFC',
         ink: '#151816',
-        muted: '#69716C',
+        muted: '#616863',
         border: '#DDE4DF',
         mint: {
           DEFAULT: '#18B889',
           dark: '#0E5C47',
           wash: '#DCF7EC',
+          // Display headings: keeps the mint identity while clearing the
+          // WCAG AA 3:1 large-text threshold on the canvas background.
+          display: '#0D9068',
         },
-        amber: '#B86B00',
+        amber: {
+          DEFAULT: '#B86B00',
+          // Darker variant for small text on light surfaces (WCAG AA 4.5:1).
+          strong: '#9A5A00',
+          // Lighter variant for small text on the dark evidence surfaces.
+          onDark: '#F0A93A',
+        },
         danger: '#C73F46',
         evidence: '#0D1310',
       },

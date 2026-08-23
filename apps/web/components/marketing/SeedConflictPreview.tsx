@@ -23,7 +23,7 @@ export function SeedConflictPreview() {
         <div className="relative z-10 m-4 -mt-8 rounded-card-lg border border-white/15 bg-[#08100c]/95 p-5 text-white shadow-2xl shadow-black/45 backdrop-blur-md sm:m-6 sm:-mt-14 sm:p-6 lg:absolute lg:bottom-7 lg:left-1/2 lg:m-0 lg:w-[58%] lg:-translate-x-1/2">
           <div className="mb-4 flex items-center justify-between gap-4">
             <span className="text-xs font-medium text-mint">After sync</span>
-            <span className="mono text-[9px] uppercase tracking-[0.16em] text-white/35">signed bundle verified</span>
+            <span className="mono text-[9px] uppercase tracking-[0.16em] text-white/70">signed bundle verified</span>
           </div>
 
           <div className="grid grid-cols-3 gap-3">
@@ -33,15 +33,15 @@ export function SeedConflictPreview() {
               { value: SEED_42.result.exceptions, label: 'exception', accent: true },
             ].map((item) => (
               <div key={item.label}>
-                <p className={`font-heading text-2xl tabular-nums sm:text-3xl ${item.accent ? 'text-amber' : 'text-white'}`}>{item.value}</p>
-                <p className="mono mt-1 text-[8px] uppercase tracking-wider text-white/35 sm:text-[9px]">{item.label}</p>
+                <p className={`font-heading text-2xl tabular-nums sm:text-3xl ${item.accent ? 'text-amber-onDark' : 'text-white'}`}>{item.value}</p>
+                <p className="mono mt-1 text-[8px] uppercase tracking-wider text-white/70 sm:text-[9px]">{item.label}</p>
               </div>
             ))}
           </div>
 
           <div className="mt-5 flex flex-col gap-2 border-t border-white/10 pt-4 sm:flex-row sm:items-center sm:justify-between">
-            <span className="mono text-[10px] text-amber">duplicate_entitlement · {SEED_42.conflictToken}</span>
-            <span className="text-[10px] text-white/40">{SEED_42.result.exceptionPeerCount} equal peers · neither erased</span>
+            <span className="mono text-[10px] text-amber-onDark">duplicate_entitlement · {SEED_42.conflictToken}</span>
+            <span className="text-[10px] text-white/70">{SEED_42.result.exceptionPeerCount} equal peers · neither erased</span>
           </div>
         </div>
       </div>

@@ -105,8 +105,17 @@ test.describe('Browser verifier page', () => {
 
   test('page is reachable from the marketing hero', async ({ page }) => {
     await page.goto('/');
-    await page.getByRole('link', { name: 'Verify a bundle' }).click();
+    await page.getByRole('link', { name: /Verify a bundle in your browser/ }).click();
     await expect(page).toHaveURL(/\/verify$/);
     await expect(page.getByRole('heading', { name: 'Verify an audit bundle' })).toBeVisible();
+  });
+
+  test('verify is reachable from the header on every page', async ({ page }) => {
+    await page.goto('/');
+    await page
+      .getByRole('banner')
+      .getByRole('link', { name: 'Verify a bundle' })
+      .click();
+    await expect(page).toHaveURL(/\/verify$/);
   });
 });

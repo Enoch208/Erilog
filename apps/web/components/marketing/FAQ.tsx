@@ -12,7 +12,7 @@ export function FAQ() {
     <section className="relative mx-auto max-w-content overflow-hidden px-6 py-32" id="faq">
       <div className="pointer-events-none absolute left-1/2 top-8 -translate-x-1/2 select-none font-heading text-[7rem] text-ink/[0.035] sm:text-[13rem]" aria-hidden="true">FAQ</div>
       <div className="relative text-center">
-        <p className="text-xl text-mint" style={{ fontFamily: 'var(--font-caveat), cursive' }}>( Questions )</p>
+        <p className="text-xl text-mint-dark" style={{ fontFamily: 'var(--font-caveat), cursive' }}>( Questions )</p>
         <h2 className="mt-5 text-4xl font-heading tracking-tight sm:text-6xl">Answered <span className="text-muted">plainly.</span></h2>
         <p className="mx-auto mt-5 max-w-md text-sm leading-relaxed text-muted">The shortest honest answers to how Erilog records, reconciles, and verifies evidence.</p>
       </div>

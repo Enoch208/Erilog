@@ -216,7 +216,7 @@ export default function OperatorPage() {
           {events.length === 0 ? (
             <div className="py-10 text-center">
               <p className="text-[13px] text-muted">No events recorded on Device {device.label}.</p>
-              <p className="mt-1 text-[11px] text-muted/70">Use the recorder to append the first handout.</p>
+              <p className="mt-1 text-[11px] text-muted">Use the recorder to append the first handout.</p>
             </div>
           ) : (
             <div className="space-y-0">

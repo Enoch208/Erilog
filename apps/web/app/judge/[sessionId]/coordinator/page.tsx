@@ -174,7 +174,7 @@ export default function CoordinatorPage() {
         {events.length === 0 ? (
           <div className="py-8 text-center">
             <p className="text-[13px] text-muted">No events have been accepted yet.</p>
-            <p className="mt-1 text-[11px] text-muted/70">Record offline handouts on Alpha and Bravo, then sync each device.</p>
+            <p className="mt-1 text-[11px] text-muted">Record offline handouts on Alpha and Bravo, then sync each device.</p>
           </div>
         ) : (
           <div className="overflow-x-auto">

@@ -24,7 +24,11 @@ Erilog preserves every recorded handout, reconciles disconnected field devices d
 
 **Core guarantee: conflicts cannot disappear.**
 
-[See it working](#product-proof) · [Run the proof](#run-the-deterministic-proof) · [Open Judge Mode](#run-judge-mode) · [Architecture](#architecture)
+### [▶ Open Judge Mode](https://erilog-kiro.vercel.app/judge) · [✔ Verify a bundle](https://erilog-kiro.vercel.app/verify)
+
+**No signup. No login. No setup.** Judge Mode provisions a deterministic seed-42 session on click.
+
+[Product proof](#product-proof) · [Run the proof locally](#run-the-deterministic-proof) · [Architecture](#architecture) · [Kiro process](#kiro-development-process)
 
 </div>
 
@@ -129,13 +133,26 @@ The generated archive is written to `tmp/seed-42-bundle.zip`.
 
 Judge Mode turns the same seed-42 contract into a guided browser workflow with coordinator and operator views.
 
-### Prerequisites
+### Hosted (fastest — nothing to install)
+
+| | Link | What it does |
+|---|---|---|
+| **Judge Mode** | **https://erilog-kiro.vercel.app/judge** | Creates a temporary seed-42 session and drops you straight into the workflow. No signup or login. |
+| **Browser verifier** | **https://erilog-kiro.vercel.app/verify** | Verifies an exported bundle entirely in your browser, including a one-click tamper test. |
+
+The hosted deployment runs the same code as this repository against managed PostgreSQL. Judge sessions are temporary and share one fixed demonstration mission, so a reset affects the shared demo state.
+
+### Local (full control)
+
+Run it yourself if you want to inspect the database, rotate the signing key, or exercise offline behavior with devtools.
+
+#### Prerequisites
 
 - Node.js 20 or newer
 - pnpm 10.33.0
 - Docker with Compose
 
-### Start the application
+#### Start the application
 
 ```bash
 pnpm install --frozen-lockfile
@@ -154,6 +171,8 @@ pnpm --filter @erilog/web dev
 Open [http://localhost:3000/judge](http://localhost:3000/judge).
 
 ### Browser walkthrough
+
+Identical on the hosted deployment and locally.
 
 1. Start the deterministic Judge session.
 2. Open Device Alpha and record `HH-040`, then `HH-042`.
@@ -401,7 +420,7 @@ Cryptographic evidence proves integrity relative to the signing key and recorded
 | Automatic background sync | Not shipped | Sync is explicitly user-triggered |
 | QR scanning | Not shipped | Judge Mode uses typed seed tokens |
 | Exception resolution workflow | Not shipped | Exceptions are exposed but not adjudicated in the UI |
-| Public hosted demo | Not shipped | No deployment configuration or supported public URL |
+| Public hosted demo | Implemented | One-click Judge Mode and browser verifier at `erilog-kiro.vercel.app` |
 | Install prompt/report download UX | Not shipped | Core PWA metadata/export APIs exist without these product surfaces |
 
 ## Technology and repository layout

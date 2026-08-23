@@ -11,7 +11,7 @@ export function EvidenceStageStack() {
     <section className="relative border-y border-border bg-surface py-28" id="how-it-works">
       <div className="relative mx-auto max-w-wide px-6">
         <div className="mx-auto max-w-narrow text-center">
-          <p className="text-xl text-mint" style={{ fontFamily: 'var(--font-caveat), cursive' }}>( How evidence survives )</p>
+          <p className="text-xl text-mint-dark" style={{ fontFamily: 'var(--font-caveat), cursive' }}>( How evidence survives )</p>
           <h2 className="mt-5 text-4xl font-heading tracking-tight sm:text-6xl sm:leading-[1.02]">
             Three stages. <span className="text-muted">One history.</span>
           </h2>
@@ -22,7 +22,7 @@ export function EvidenceStageStack() {
             const meta = STAGE_META[i]!;
             return (
               <article key={stage.number} className="flex flex-col rounded-feature border border-border bg-canvas p-8">
-                <span className="mono text-[11px] text-mint">STAGE {stage.number}</span>
+                <span className="mono text-[11px] text-mint-dark">STAGE {stage.number}</span>
                 <h3 className="mt-4 text-2xl font-heading tracking-tight">{stage.title}</h3>
                 <p className="mt-3 text-sm leading-relaxed text-muted">{stage.description}</p>
 

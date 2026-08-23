@@ -6,7 +6,7 @@ export function FinalCTA() {
     <section className="mx-auto max-w-wide px-6 py-20 sm:py-28">
       <div className="relative overflow-hidden rounded-feature-lg bg-[radial-gradient(ellipse_at_18%_120%,#1d4937_0%,#0d1712_48%,#060907_100%)] px-8 py-20 text-white shadow-2xl shadow-ink/20 sm:px-14 sm:py-24">
         <div className="pointer-events-none absolute right-[7%] top-[12%] hidden w-64 rotate-3 rounded-2xl border border-white/10 bg-white/[0.035] p-5 opacity-60 lg:block">
-          <div className="mb-4 flex items-center justify-between"><span className="mono text-[9px] text-white/35">bundle / seed-42</span><span className="h-1.5 w-1.5 rounded-full bg-mint" /></div>
+          <div className="mb-4 flex items-center justify-between"><span className="mono text-[9px] text-white/70">bundle / seed-42</span><span className="h-1.5 w-1.5 rounded-full bg-mint" /></div>
           <div className="space-y-2"><div className="h-2 w-3/4 rounded-full bg-mint/50" /><div className="h-2 w-full rounded-full bg-white/10" /><div className="h-2 w-2/3 rounded-full bg-white/10" /></div>
           <p className="mono mt-5 text-[9px] text-mint">PASS · all checks passed</p>
         </div>

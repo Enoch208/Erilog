@@ -18,7 +18,7 @@ export function KiroBuildStory() {
           <a href={`${ROUTES.github}/tree/main/.kiro`} target="_blank" rel="noopener noreferrer" className="group mt-8 inline-flex cursor-pointer items-center gap-2 text-sm font-medium text-white underline decoration-white/30 decoration-2 underline-offset-4 hover:decoration-white">Inspect the real spec <span className="transition-transform group-hover:translate-x-1" aria-hidden="true">→</span></a>
         </div>
         <div className="divide-y divide-border p-4 sm:p-8">
-          {PROOF.map(([label, note], index) => <div key={label} className="flex items-center gap-4 px-3 py-5"><span className="mono text-[9px] text-mint">0{index + 1}</span><span className="mono flex-1 text-[12px] text-ink">{label}</span><span className="text-right text-[10px] text-muted">{note}</span></div>)}
+          {PROOF.map(([label, note], index) => <div key={label} className="flex items-center gap-4 px-3 py-5"><span className="mono text-[9px] text-mint-dark">0{index + 1}</span><span className="mono flex-1 text-[12px] text-ink">{label}</span><span className="text-right text-[10px] text-muted">{note}</span></div>)}
         </div>
       </div>
     </section>

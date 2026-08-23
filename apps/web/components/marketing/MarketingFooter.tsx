@@ -9,7 +9,8 @@ const FOOTER_GROUPS = [
     links: [
       { label: 'How it works', href: '#how-it-works' },
       { label: 'Integrity', href: '#integrity' },
-      { label: 'Verifier', href: '#verifier' },
+      { label: 'Verify a bundle', href: ROUTES.verify },
+      { label: 'Open Judge Mode', href: ROUTES.judge },
     ],
   },
   {

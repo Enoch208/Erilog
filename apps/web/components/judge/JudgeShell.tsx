@@ -48,7 +48,7 @@ export function JudgeShell({
         </div>
 
         <div className="flex-1 px-3 py-5">
-          <p className="mono px-3 text-[9px] uppercase tracking-[0.18em] text-muted/70">Workspace</p>
+          <p className="mono px-3 text-[9px] uppercase tracking-[0.18em] text-muted">Workspace</p>
           <nav className="mt-3 space-y-1" aria-label="Judge mode navigation">
             {navigation.map((item) => {
               const active = activePage === item.key;

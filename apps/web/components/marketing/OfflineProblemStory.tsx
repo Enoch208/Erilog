@@ -33,7 +33,7 @@ function DeviceCard({
       <div className="space-y-2">
         {tokens.map((token) => (
           <div key={token.code} className={`flex items-center justify-between rounded-control border px-3.5 py-3 ${token.conflict ? 'border-amber/30 bg-amber/[0.06]' : 'border-border bg-canvas'}`}>
-            <span className={`mono text-xs ${token.conflict ? 'text-amber' : 'text-muted'}`}>{token.code}</span>
+            <span className={`mono text-xs ${token.conflict ? 'text-amber-strong' : 'text-muted'}`}>{token.code}</span>
             <span className="text-[10px] font-medium text-mint-dark">Recorded</span>
           </div>
         ))}
@@ -50,7 +50,7 @@ export function OfflineProblemStory() {
       <div className="pointer-events-none absolute left-1/2 top-16 -translate-x-1/2 select-none whitespace-nowrap font-heading text-[6rem] text-ink/[0.035] sm:text-[12rem] lg:text-[16rem]" aria-hidden="true">Conflict</div>
       <div className="relative mx-auto max-w-wide">
         <div className="mx-auto max-w-narrow text-center">
-          <p className="text-xl text-mint" style={{ fontFamily: 'var(--font-caveat), cursive' }}>( the real problem )</p>
+          <p className="text-xl text-mint-dark" style={{ fontFamily: 'var(--font-caveat), cursive' }}>( the real problem )</p>
           <h2 className="mt-6 text-4xl font-heading leading-[1.08] tracking-tight sm:text-6xl">
             Two honest devices can produce <span className="text-muted">one uncomfortable truth.</span>
           </h2>
@@ -66,7 +66,7 @@ export function OfflineProblemStory() {
           </div>
           <div className="relative mx-auto -mt-2 flex w-fit items-center gap-2 rounded-full border border-amber/25 bg-[#fffaf0] px-4 py-2.5 shadow-lg shadow-amber/10 md:-mt-5">
             <span className="h-1.5 w-1.5 rounded-full bg-amber" />
-            <span className="mono text-[10px] text-amber">{SEED_42.conflictToken} appears in both histories</span>
+            <span className="mono text-[10px] text-amber-strong">{SEED_42.conflictToken} appears in both histories</span>
           </div>
         </div>
 

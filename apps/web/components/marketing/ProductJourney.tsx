@@ -5,7 +5,7 @@ export function ProductJourney() {
     <section className="relative mx-auto max-w-wide overflow-hidden px-6 py-28" aria-labelledby="product-journey-title">
       <div className="pointer-events-none absolute left-1/2 top-10 -translate-x-1/2 select-none whitespace-nowrap font-heading text-[6rem] leading-none text-ink/[0.035] sm:text-[12rem]" aria-hidden="true">FIELD</div>
       <div className="relative mx-auto max-w-narrow text-center">
-        <p className="text-xl text-mint" style={{ fontFamily: 'var(--font-caveat), cursive' }}>( One continuous evidence journey )</p>
+        <p className="text-xl text-mint-dark" style={{ fontFamily: 'var(--font-caveat), cursive' }}>( One continuous evidence journey )</p>
         <h2 id="product-journey-title" className="mt-5 text-4xl font-heading tracking-tight sm:text-6xl sm:leading-[1.03]">Simple in the field. <span className="text-muted">Explicit after sync.</span></h2>
         <p className="mx-auto mt-7 max-w-prose text-base leading-relaxed text-muted">Operators record what physically happened. Coordinators see the resulting stock position and every exception—without either view pretending to know more than the evidence supports.</p>
       </div>

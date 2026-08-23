@@ -11,6 +11,13 @@ import AxeBuilder from '@axe-core/playwright';
 test.describe('Accessibility Audit', () => {
   test('landing page has no critical violations', async ({ page }) => {
     await page.goto('/');
+    // The hero words animate in. Audit the settled state, not a mid-transition
+    // frame, otherwise axe samples interpolated colors that never persist.
+    await page.waitForFunction(
+      () => document.getAnimations().every((a) => a.playState !== 'running'),
+      undefined,
+      { timeout: 10_000 }
+    );
     const results = await new AxeBuilder({ page })
       .withTags(['wcag2a', 'wcag2aa'])
       .analyze();
