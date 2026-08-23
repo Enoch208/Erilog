@@ -44,6 +44,16 @@ jobs:
       - name: Install dependencies (frozen lockfile)
         run: pnpm install --frozen-lockfile
 
+      # The repo's `db:setup` goes through `docker compose exec`, which does not
+      # apply to a service container. Apply the same schema file directly.
+      - name: Apply database schema
+        run: psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f drizzle/0001_schema.sql
+
+      # Integration tests connect as app_role to prove UPDATE/DELETE are denied.
+      # Login is a per-deployment concern, so the schema does not set it.
+      - name: Provision app_role login for integration tests
+        run: psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -c "ALTER ROLE app_role LOGIN PASSWORD 'app_pass';"
+
       - name: Typecheck
         run: pnpm turbo typecheck
 

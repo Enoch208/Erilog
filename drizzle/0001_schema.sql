@@ -105,16 +105,29 @@ CREATE TABLE judge_sessions (
   created_at      TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
--- Immutability enforcement when the deployment has provisioned app_role.
+-- Application privileges, then immutability enforcement.
+--
+-- app_role is the least-privilege role the application uses: it may read and
+-- append, never mutate or remove recorded evidence. Granting SELECT/INSERT
+-- explicitly is what makes the REVOKE below meaningful — without it the
+-- revoke is a no-op against a role that had no privileges to begin with.
+--
+-- Login and password are deployment concerns and are deliberately not set
+-- here. Provision them per environment, for example:
+--   ALTER ROLE app_role LOGIN PASSWORD '<secret>';
 DO $$
 BEGIN
   IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'app_role') THEN
+    EXECUTE 'GRANT SELECT, INSERT ON missions, policy_versions, devices, events,
+             reconciliation_snapshots, resolutions, judge_sessions TO app_role';
+    EXECUTE 'GRANT USAGE ON SCHEMA public TO app_role';
+
     EXECUTE 'REVOKE UPDATE, DELETE ON policy_versions FROM app_role';
     EXECUTE 'REVOKE UPDATE, DELETE ON events FROM app_role';
     EXECUTE 'REVOKE UPDATE, DELETE ON resolutions FROM app_role';
     EXECUTE 'REVOKE UPDATE, DELETE ON reconciliation_snapshots FROM app_role';
   ELSE
-    RAISE NOTICE 'Skipping app_role immutability grants: role is unavailable';
+    RAISE NOTICE 'Skipping app_role grants: role is unavailable';
   END IF;
 END
 $$;
