@@ -1,15 +1,13 @@
 import { MarketingHeader } from '@/components/marketing/MarketingHeader';
 import { MarketingHero } from '@/components/marketing/MarketingHero';
+import { MarketingReveal } from '@/components/marketing/MarketingReveal';
 import { SeedConflictPreview } from '@/components/marketing/SeedConflictPreview';
 import { IntegrityStrip } from '@/components/marketing/IntegrityStrip';
 import { OfflineProblemStory } from '@/components/marketing/OfflineProblemStory';
 import { EvidenceStageStack } from '@/components/marketing/EvidenceStageStack';
-import { FieldOperatorPreview } from '@/components/marketing/FieldOperatorPreview';
-import { CoordinatorPreview } from '@/components/marketing/CoordinatorPreview';
+import { ProductJourney } from '@/components/marketing/ProductJourney';
 import { AuditTamperPreview } from '@/components/marketing/AuditTamperPreview';
-import { IntegrityMatrix } from '@/components/marketing/IntegrityMatrix';
 import { KiroBuildStory } from '@/components/marketing/KiroBuildStory';
-import { HonestLimitation } from '@/components/marketing/HonestLimitation';
 import { FAQ } from '@/components/marketing/FAQ';
 import { FinalCTA } from '@/components/marketing/FinalCTA';
 import { MarketingFooter } from '@/components/marketing/MarketingFooter';
@@ -20,18 +18,15 @@ export default function HomePage() {
       <MarketingHeader />
       <main>
         <MarketingHero />
-        <SeedConflictPreview />
+        <MarketingReveal><SeedConflictPreview /></MarketingReveal>
         <IntegrityStrip />
-        <OfflineProblemStory />
+        <MarketingReveal><OfflineProblemStory /></MarketingReveal>
         <EvidenceStageStack />
-        <FieldOperatorPreview />
-        <CoordinatorPreview />
-        <AuditTamperPreview />
-        <IntegrityMatrix />
-        <KiroBuildStory />
-        <HonestLimitation />
-        <FAQ />
-        <FinalCTA />
+        <MarketingReveal><ProductJourney /></MarketingReveal>
+        <MarketingReveal><AuditTamperPreview /></MarketingReveal>
+        <MarketingReveal><KiroBuildStory /></MarketingReveal>
+        <MarketingReveal><FAQ /></MarketingReveal>
+        <MarketingReveal><FinalCTA /></MarketingReveal>
       </main>
       <MarketingFooter />
     </>

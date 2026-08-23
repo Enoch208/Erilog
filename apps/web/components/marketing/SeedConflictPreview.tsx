@@ -1,159 +1,47 @@
+import Image from 'next/image';
 import { SEED_42 } from '@/lib/content';
-
-function EventRow({
-  seq,
-  token,
-  qty,
-  conflict = false,
-}: {
-  seq: number;
-  token: string;
-  qty: number;
-  conflict?: boolean;
-}) {
-  return (
-    <div className="flex items-center justify-between border-b border-white/[0.06] py-2.5 last:border-0">
-      <div className="flex items-center gap-3">
-        <span className="mono text-[10px] tabular-nums text-white/30">
-          {String(seq).padStart(2, '0')}
-        </span>
-        <span
-          className={`mono text-xs ${conflict ? 'text-amber' : 'text-white/70'}`}
-        >
-          {token}
-        </span>
-      </div>
-      <span className="mono text-[10px] text-white/40">×{qty}</span>
-    </div>
-  );
-}
 
 export function SeedConflictPreview() {
   return (
-    <section className="mx-auto max-w-[1240px] px-6 pb-24" id="product">
-      <div
-        className="relative overflow-hidden rounded-feature-lg px-6 py-10 sm:px-12 sm:py-14"
-        style={{
-          background:
-            'radial-gradient(at 50% 120%, #16241D 0%, #0F1713 45%, #0A0F0C 100%)',
-        }}
-      >
-        {/* Caption */}
-        <div className="mb-10 text-center">
-          <p className="mono text-[10px] uppercase tracking-[0.2em] text-white/35">
-            Seed 42 · deterministic scenario
-          </p>
-          <h2 className="mt-3 text-xl font-heading text-white/95 sm:text-2xl">
-            Two devices. One entitlement. Nothing hidden.
-          </h2>
+    <section className="mx-auto max-w-wide px-6 pb-24" id="product">
+      <div className="relative overflow-hidden rounded-feature-lg bg-evidence shadow-2xl shadow-ink/15">
+        <div className="relative aspect-[16/10] w-full sm:aspect-video">
+          <Image
+            src="/hero-evidence-2.png"
+            alt="Erilog offline event queue, duplicate-entitlement exception, and signed seed-42 audit bundle"
+            fill
+            priority
+            sizes="(max-width: 1240px) 100vw, 1240px"
+            className="object-cover object-center"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-evidence/75 via-transparent to-black/5" />
+          <div className="absolute left-5 top-5 rounded-full border border-white/20 bg-black/35 px-3 py-1.5 backdrop-blur-md sm:left-8 sm:top-8">
+            <span className="mono text-[9px] uppercase tracking-[0.18em] text-white/75">Seed-42 evidence journey</span>
+          </div>
         </div>
 
-        {/* Evidence grid */}
-        <div className="grid gap-4 lg:grid-cols-[1fr_1fr_1.15fr]">
-          {/* Device Alpha */}
-          <div className="rounded-card border border-white/[0.08] bg-white/[0.02] p-5">
-            <div className="mb-4 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <span className="h-1.5 w-1.5 rounded-full bg-mint" />
-                <span className="text-xs font-medium text-white/80">
-                  Device {SEED_42.devices.alpha.label}
-                </span>
-              </div>
-              <span className="mono text-[10px] text-white/25">
-                {SEED_42.devices.alpha.allocation} kits
-              </span>
-            </div>
-            <div>
-              <EventRow seq={0} token="HH-040" qty={1} />
-              <EventRow
-                seq={1}
-                token={SEED_42.conflictToken}
-                qty={1}
-                conflict
-              />
-            </div>
-            <p className="mt-4 text-[10px] leading-relaxed text-white/35">
-              Recorded offline. Cannot see Bravo.
-            </p>
+        <div className="relative z-10 m-4 -mt-8 rounded-card-lg border border-white/15 bg-[#08100c]/95 p-5 text-white shadow-2xl shadow-black/45 backdrop-blur-md sm:m-6 sm:-mt-14 sm:p-6 lg:absolute lg:bottom-7 lg:left-1/2 lg:m-0 lg:w-[58%] lg:-translate-x-1/2">
+          <div className="mb-4 flex items-center justify-between gap-4">
+            <span className="text-xs font-medium text-mint">After sync</span>
+            <span className="mono text-[9px] uppercase tracking-[0.16em] text-white/35">signed bundle verified</span>
           </div>
 
-          {/* Device Bravo */}
-          <div className="rounded-card border border-white/[0.08] bg-white/[0.02] p-5">
-            <div className="mb-4 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <span className="h-1.5 w-1.5 rounded-full bg-mint" />
-                <span className="text-xs font-medium text-white/80">
-                  Device {SEED_42.devices.bravo.label}
-                </span>
+          <div className="grid grid-cols-3 gap-3">
+            {[
+              { value: SEED_42.result.distributed, label: 'distributed' },
+              { value: SEED_42.result.remaining, label: 'remaining' },
+              { value: SEED_42.result.exceptions, label: 'exception', accent: true },
+            ].map((item) => (
+              <div key={item.label}>
+                <p className={`font-heading text-2xl tabular-nums sm:text-3xl ${item.accent ? 'text-amber' : 'text-white'}`}>{item.value}</p>
+                <p className="mono mt-1 text-[8px] uppercase tracking-wider text-white/35 sm:text-[9px]">{item.label}</p>
               </div>
-              <span className="mono text-[10px] text-white/25">
-                {SEED_42.devices.bravo.allocation} kits
-              </span>
-            </div>
-            <div>
-              <EventRow seq={0} token="HH-041" qty={1} />
-              <EventRow
-                seq={1}
-                token={SEED_42.conflictToken}
-                qty={1}
-                conflict
-              />
-            </div>
-            <p className="mt-4 text-[10px] leading-relaxed text-white/35">
-              Recorded offline. Cannot see Alpha.
-            </p>
+            ))}
           </div>
 
-          {/* Reconciled result */}
-          <div className="rounded-card border border-mint/25 bg-mint/[0.04] p-5">
-            <div className="mb-4 flex items-center gap-2">
-              <span className="text-xs font-medium text-mint">
-                After synchronization
-              </span>
-            </div>
-
-            <div className="mb-4 grid grid-cols-3 gap-2">
-              {[
-                { v: SEED_42.result.distributed, l: 'handed out' },
-                { v: SEED_42.result.remaining, l: 'remaining' },
-                { v: SEED_42.result.exceptions, l: 'exception', amber: true },
-              ].map((stat) => (
-                <div key={stat.l}>
-                  <div
-                    className={`font-heading text-2xl tabular-nums ${
-                      stat.amber ? 'text-amber' : 'text-white/90'
-                    }`}
-                  >
-                    {stat.v}
-                  </div>
-                  <div className="mono text-[9px] uppercase tracking-wider text-white/30">
-                    {stat.l}
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="rounded-control border border-amber/25 bg-amber/[0.06] p-3">
-              <div className="mono text-[10px] text-amber">
-                duplicate_entitlement
-              </div>
-              <div className="mono mt-1 text-[10px] text-white/45">
-                {SEED_42.conflictToken} · {SEED_42.result.exceptionPeerCount}{' '}
-                peer events
-              </div>
-              <div className="mt-2 text-[10px] text-white/35">
-                Both preserved. No winner selected.
-              </div>
-            </div>
-
-            <div className="mt-4 flex items-center gap-2 border-t border-white/[0.06] pt-3">
-              <span className="text-mint" aria-hidden="true">
-                ✓
-              </span>
-              <span className="mono text-[10px] text-mint/90">
-                Signed bundle verified
-              </span>
-            </div>
+          <div className="mt-5 flex flex-col gap-2 border-t border-white/10 pt-4 sm:flex-row sm:items-center sm:justify-between">
+            <span className="mono text-[10px] text-amber">duplicate_entitlement · {SEED_42.conflictToken}</span>
+            <span className="text-[10px] text-white/40">{SEED_42.result.exceptionPeerCount} equal peers · neither erased</span>
           </div>
         </div>
       </div>

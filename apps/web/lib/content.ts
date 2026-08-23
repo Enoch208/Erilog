@@ -32,7 +32,7 @@ export const SEED_42 = {
 export const ROUTES = {
   judge: '/judge',
   verify: '/verify',
-  github: 'https://github.com/enoch/Erilog', // Update with real URL
+  github: 'https://github.com/Enoch208/Erilog'
 } as const;
 
 export const HERO = {
