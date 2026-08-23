@@ -2,7 +2,8 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**"]
+      "env": ["DATABASE_URL", "ERILOG_SIGNING_PRIVATE_KEY"],
+      "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
     },
     "test": {
       "dependsOn": ["^build"]
