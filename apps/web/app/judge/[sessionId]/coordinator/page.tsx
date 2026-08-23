@@ -26,15 +26,13 @@ export default function CoordinatorPage() {
         setData(await res.json());
       }
     } catch {
-      // Network error — will retry
+      // Network error
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  useEffect(() => { fetchData(); }, []);
 
   const handleExport = async () => {
     setExporting(true);
@@ -55,23 +53,26 @@ export default function CoordinatorPage() {
   };
 
   const handleReset = async () => {
-    if (!confirm('Reset all events? This will clear the reconciliation state.')) return;
+    if (!confirm('Reset all events? This clears reconciliation state.')) return;
     await fetch('/api/judge', { method: 'DELETE' });
     fetchData();
   };
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-canvas">
-        <p className="text-muted">Loading mission data...</p>
+      <div className="flex min-h-screen items-center justify-center bg-evidence">
+        <div className="flex items-center gap-3 text-white/40">
+          <div className="h-4 w-4 animate-spin rounded-full border-2 border-mint/30 border-t-mint" />
+          <span className="text-sm">Loading...</span>
+        </div>
       </div>
     );
   }
 
   if (!data) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-canvas">
-        <p className="text-muted">Failed to load mission. Check your session.</p>
+      <div className="flex min-h-screen items-center justify-center bg-evidence">
+        <p className="text-sm text-white/40">Failed to load. Check session.</p>
       </div>
     );
   }
@@ -83,149 +84,131 @@ export default function CoordinatorPage() {
   const exceptions = snapshot?.exceptions ?? [];
 
   return (
-    <div className="min-h-screen bg-canvas">
-      <header className="border-b border-border bg-surface px-6 py-4">
-        <div className="mx-auto flex max-w-5xl items-center justify-between">
+    <div className="min-h-screen bg-evidence text-white">
+      <header className="border-b border-white/10 px-6 py-4">
+        <div className="mx-auto flex max-w-6xl items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link href={`/judge/${sessionId}`} className="text-sm text-mint hover:text-mint-dark">
-              ← Back
+            <Link href={`/judge/${sessionId}`} className="flex items-center gap-1.5 text-[13px] text-white/40 hover:text-mint transition-colors">
+              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+              </svg>
+              Back
             </Link>
-            <h1 className="font-heading text-lg text-ink">Coordinator</h1>
+            <div className="h-4 w-px bg-white/10" />
+            <h1 className="font-heading text-[15px]">Coordinator</h1>
           </div>
-          <div className="flex items-center gap-3">
-            <button
-              onClick={handleReset}
-              className="rounded-full border border-border px-3 py-1.5 text-[12px] text-muted transition hover:border-red hover:text-red"
-            >
+          <div className="flex items-center gap-2">
+            <button onClick={handleReset} className="rounded-lg border border-white/10 px-3 py-1.5 text-[11px] text-white/40 transition hover:border-red/30 hover:text-red">
               Reset
             </button>
-            <button
-              onClick={fetchData}
-              className="rounded-full border border-border px-3 py-1.5 text-[12px] text-muted transition hover:border-mint hover:text-mint"
-            >
+            <button onClick={fetchData} className="rounded-lg border border-white/10 px-3 py-1.5 text-[11px] text-white/40 transition hover:border-mint/30 hover:text-mint">
               Refresh
             </button>
           </div>
         </div>
       </header>
 
-      <main className="mx-auto max-w-5xl px-6 py-8">
-        {/* Mission header */}
-        <div className="rounded-feature border border-border bg-surface p-6">
-          <div className="flex items-start justify-between">
-            <div>
-              <h2 className="font-heading text-xl text-ink">{mission.name}</h2>
-              <p className="mono mt-1 text-[10px] text-muted">
-                {mission.id}
-              </p>
+      <main className="mx-auto max-w-6xl px-6 py-8">
+        {/* Metrics */}
+        <div className="grid gap-3 sm:grid-cols-4">
+          {[
+            { label: 'Total Stock', value: mission.totalStock.emergency_kit ?? 0, color: 'text-white' },
+            { label: 'Distributed', value: distributed, color: 'text-mint' },
+            { label: 'Remaining', value: remaining, color: 'text-white' },
+            { label: 'Unique Tokens', value: uniqueTokens, color: 'text-white' },
+          ].map((metric) => (
+            <div key={metric.label} className="rounded-xl border border-white/10 bg-white/[0.02] p-5">
+              <p className="mono text-[9px] uppercase tracking-[0.16em] text-white/30">{metric.label}</p>
+              <p className={`mt-2 font-heading text-2xl ${metric.color}`}>{metric.value}</p>
             </div>
-            <span className="rounded-full bg-mint-wash px-2.5 py-1 text-[11px] font-medium text-mint-dark">
-              {mission.status}
-            </span>
-          </div>
-        </div>
-
-        {/* Stock summary */}
-        <div className="mt-6 grid gap-4 sm:grid-cols-4">
-          <div className="rounded-feature border border-border bg-surface p-5 text-center">
-            <p className="font-heading text-2xl text-ink">
-              {mission.totalStock.emergency_kit ?? 0}
-            </p>
-            <p className="mono mt-1 text-[9px] uppercase tracking-wider text-muted">Total Stock</p>
-          </div>
-          <div className="rounded-feature border border-border bg-surface p-5 text-center">
-            <p className="font-heading text-2xl text-mint-dark">{distributed}</p>
-            <p className="mono mt-1 text-[9px] uppercase tracking-wider text-muted">Distributed</p>
-          </div>
-          <div className="rounded-feature border border-border bg-surface p-5 text-center">
-            <p className="font-heading text-2xl text-ink">{remaining}</p>
-            <p className="mono mt-1 text-[9px] uppercase tracking-wider text-muted">Remaining</p>
-          </div>
-          <div className="rounded-feature border border-border bg-surface p-5 text-center">
-            <p className="font-heading text-2xl text-ink">{uniqueTokens}</p>
-            <p className="mono mt-1 text-[9px] uppercase tracking-wider text-muted">Unique Tokens</p>
-          </div>
+          ))}
         </div>
 
         {/* Devices */}
-        <h3 className="mt-8 font-heading text-sm text-ink">Devices</h3>
-        <div className="mt-3 grid gap-3 sm:grid-cols-2">
+        <div className="mt-8 grid gap-3 sm:grid-cols-2">
           {missionDevices.map((device) => {
             const deviceEvents = missionEvents.filter((e) => e.deviceId === device.id);
             return (
-              <div key={device.id} className="rounded-feature border border-border bg-surface p-5">
-                <div className="flex items-center justify-between">
-                  <p className="font-heading text-sm text-ink">{device.label}</p>
-                  <span className="mono text-[9px] text-muted">{deviceEvents.length} events</span>
+              <div key={device.id} className="flex items-center justify-between rounded-xl border border-white/10 bg-white/[0.02] px-5 py-4">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/[0.06]">
+                    <span className="text-[12px] font-medium text-white/60">{device.label[0]}</span>
+                  </div>
+                  <div>
+                    <p className="text-[13px] font-medium">{device.label}</p>
+                    <p className="mono text-[10px] text-white/30">{device.allocation.emergency_kit} kits</p>
+                  </div>
                 </div>
-                <p className="mono mt-2 text-[9px] text-muted">
-                  Allocation: {device.allocation.emergency_kit ?? 0} kits
-                </p>
+                <span className="mono text-[11px] text-white/30">{deviceEvents.length} events</span>
               </div>
             );
           })}
         </div>
 
         {/* Exceptions */}
-        <h3 className="mt-8 font-heading text-sm text-ink">
-          Exceptions {exceptions.length > 0 && <span className="text-amber">({exceptions.length})</span>}
-        </h3>
-        {exceptions.length === 0 ? (
-          <p className="mt-3 text-sm text-muted">No exceptions detected yet.</p>
-        ) : (
-          <div className="mt-3 space-y-3">
-            {exceptions.map((exc) => (
-              <div key={exc.id} className="rounded-feature border border-amber/25 bg-amber/[0.04] p-5">
-                <div className="flex items-center justify-between">
-                  <span className="mono text-[10px] font-medium text-amber">{exc.type}</span>
-                  <span className="mono text-[9px] text-muted">{exc.status}</span>
-                </div>
-                {exc.tokenHash && (
-                  <p className="mono mt-2 text-[10px] text-muted">
-                    Token: {exc.tokenHash.slice(0, 16)}...
+        {exceptions.length > 0 && (
+          <div className="mt-8">
+            <h3 className="flex items-center gap-2 text-[13px] font-medium">
+              <span className="h-1.5 w-1.5 rounded-full bg-amber" />
+              Exceptions ({exceptions.length})
+            </h3>
+            <div className="mt-3 space-y-2">
+              {exceptions.map((exc) => (
+                <div key={exc.id} className="rounded-xl border border-amber/15 bg-amber/[0.04] p-4">
+                  <div className="flex items-center justify-between">
+                    <span className="mono text-[11px] font-medium text-amber">{exc.type}</span>
+                    <span className="rounded-full border border-white/10 px-2 py-0.5 text-[9px] text-white/30">{exc.status}</span>
+                  </div>
+                  {exc.tokenHash && (
+                    <p className="mono mt-2 text-[10px] text-white/30">Token: {exc.tokenHash.slice(0, 20)}...</p>
+                  )}
+                  <p className="mt-1 text-[11px] text-white/40">
+                    {exc.eventIds.length} peer events across {exc.deviceIds.length} device(s)
                   </p>
-                )}
-                <p className="mt-1 text-[11px] text-muted">
-                  {exc.eventIds.length} peer events · {exc.deviceIds.length} device(s)
-                </p>
-              </div>
-            ))}
+                </div>
+              ))}
+            </div>
           </div>
         )}
 
-        {/* Events */}
-        <h3 className="mt-8 font-heading text-sm text-ink">
-          Accepted Events ({missionEvents.length})
-        </h3>
-        {missionEvents.length === 0 ? (
-          <p className="mt-3 text-sm text-muted">No events synced yet.</p>
-        ) : (
-          <div className="mt-3 overflow-x-auto rounded-feature border border-border">
-            <table className="w-full text-left text-[12px]">
-              <thead className="border-b border-border bg-canvas">
-                <tr>
-                  <th className="px-4 py-2 font-medium text-muted">Device</th>
-                  <th className="px-4 py-2 font-medium text-muted">Seq</th>
-                  <th className="px-4 py-2 font-medium text-muted">Token</th>
-                  <th className="px-4 py-2 font-medium text-muted">Qty</th>
-                  <th className="px-4 py-2 font-medium text-muted">Hash</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border bg-surface">
-                {missionEvents.map((event) => {
-                  const device = missionDevices.find((d) => d.id === event.deviceId);
-                  return (
-                    <tr key={event.id}>
-                      <td className="px-4 py-2 text-ink">{device?.label ?? '—'}</td>
-                      <td className="px-4 py-2 mono text-muted">{event.sequence}</td>
-                      <td className="px-4 py-2 mono text-muted">{event.tokenHash.slice(0, 12)}...</td>
-                      <td className="px-4 py-2 text-ink">{event.quantity}</td>
-                      <td className="px-4 py-2 mono text-muted">{event.eventHash.slice(0, 12)}...</td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+        {/* Events table */}
+        {missionEvents.length > 0 && (
+          <div className="mt-8">
+            <h3 className="text-[13px] font-medium">Accepted Events ({missionEvents.length})</h3>
+            <div className="mt-3 overflow-hidden rounded-xl border border-white/10">
+              <table className="w-full text-left text-[12px]">
+                <thead>
+                  <tr className="border-b border-white/10 bg-white/[0.02]">
+                    <th className="px-4 py-3 font-medium text-white/30">Device</th>
+                    <th className="px-4 py-3 font-medium text-white/30">Seq</th>
+                    <th className="px-4 py-3 font-medium text-white/30">Token</th>
+                    <th className="px-4 py-3 font-medium text-white/30">Qty</th>
+                    <th className="px-4 py-3 font-medium text-white/30">Hash</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-white/5">
+                  {missionEvents.map((event) => {
+                    const device = missionDevices.find((d) => d.id === event.deviceId);
+                    return (
+                      <tr key={event.id} className="hover:bg-white/[0.02]">
+                        <td className="px-4 py-3 text-white/70">{device?.label ?? '—'}</td>
+                        <td className="px-4 py-3 mono text-white/40">{event.sequence}</td>
+                        <td className="px-4 py-3 mono text-white/40">{event.tokenHash.slice(0, 12)}...</td>
+                        <td className="px-4 py-3 text-white/70">{event.quantity}</td>
+                        <td className="px-4 py-3 mono text-white/30">{event.eventHash.slice(0, 12)}...</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {missionEvents.length === 0 && (
+          <div className="mt-8 flex flex-col items-center justify-center rounded-xl border border-dashed border-white/10 py-12">
+            <p className="text-sm text-white/30">No events synced yet</p>
+            <p className="mt-1 text-[12px] text-white/20">Record handouts from operator views, then sync</p>
           </div>
         )}
 
@@ -234,13 +217,14 @@ export default function CoordinatorPage() {
           <button
             onClick={handleExport}
             disabled={missionEvents.length === 0 || exporting}
-            className="btn-primary disabled:cursor-not-allowed disabled:opacity-50"
+            className="inline-flex items-center gap-2 rounded-xl bg-mint px-5 py-3 text-[13px] font-medium text-evidence transition hover:bg-mint/90 disabled:cursor-not-allowed disabled:opacity-40"
           >
+            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+            </svg>
             {exporting ? 'Exporting...' : 'Export Audit Bundle'}
           </button>
-          <span className="text-[11px] text-muted">
-            Signed ZIP · verifiable offline
-          </span>
+          <span className="text-[11px] text-white/25">Signed ZIP · independently verifiable</span>
         </div>
       </main>
     </div>
