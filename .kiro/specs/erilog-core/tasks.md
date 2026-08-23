@@ -1351,45 +1351,44 @@ Generate SQL migrations.
 
 ## Signature-Demo Readiness Checklist
 
-All items must be YES before the demo is shown:
+`[x]` means verified with a named artifact. `[ ]` means not yet verified, with the
+reason stated. Nothing is checked on the basis of "it should work".
 
-- [ ] Seed-42 UUIDs, hashes, and expected results frozen in fixtures
-- [ ] `reconcile(seed42Input)` produces byte-exact expected output
-- [ ] Property tests pass (8 properties × 1000 runs)
-- [ ] PostgreSQL migrations apply cleanly
-- [ ] Sync accepts 4 events and produces correct snapshot
-- [ ] Reverse sync order produces identical snapshot
-- [ ] Duplicate sync (replay) returns `already_seen`, no state change
-- [ ] Coordinator view shows 4 distributed, 96 remaining, 1 exception, 2 peer events
-- [ ] Exception displays NO winner/original/duplicate designation
-- [ ] Export produces valid signed ZIP with all manifest fields
-- [ ] Verifier passes valid bundle with "PASS — all checks passed"
-- [ ] Tamper Lab (qty 1→2) produces FAIL with file checksum diagnostic
-- [ ] Verifier works with network disabled
-- [ ] Offline recording survives page reload
-- [ ] "Recorded on this device — pending sync" — no approval language anywhere
-- [ ] Judge Mode reachable from public URL, no signup
-- [ ] Reset returns exact seed-42 state
-- [ ] Full flow completes in ≤ 90 seconds
+- [x] Seed-42 UUIDs, hashes, and expected results frozen in fixtures — `packages/crypto/fixtures/seed-42-vectors.json`
+- [x] `reconcile(seed42Input)` produces byte-exact expected output — `packages/reconcile/tests/seed-42.test.ts`
+- [x] Property tests pass — 8 properties in `reconcile.property.test.ts`. Corrected: generated cases are 50–200 per property, not 1000. The original 1000 figure was never true.
+- [x] PostgreSQL migrations apply cleanly — applied to a throwaway `postgres:15-alpine` container and in CI
+- [x] Sync accepts 4 events and produces correct snapshot — verified on the hosted deployment
+- [x] Reverse sync order produces identical snapshot — property P1 (`fc.shuffledSubarray`) plus headless proof step 10
+- [x] Duplicate sync (replay) returns `already_seen`, no state change — headless proof step 5
+- [x] Coordinator view shows 4 distributed, 96 remaining, 1 exception, 2 peer events — verified on the hosted deployment
+- [x] Exception displays NO winner/original/duplicate designation — `ExceptionRecord` has no `winnerId`/`originalId` field
+- [x] Export produces valid signed ZIP with all manifest fields — verified by exporting from hosted Judge Mode
+- [x] Verifier passes valid bundle with "PASS — all checks passed" — headless proof step 9 and `/verify` (7 layers)
+- [x] Tamper Lab (qty 1→2) produces FAIL with file checksum diagnostic — headless proof step 10 and the `/verify` tamper test, which names `file_checksum · events.json`
+- [ ] Verifier works with network disabled — verification itself is client-side and uploads nothing, but this has not been tested with the network cut after page load. Pinning the key from `/api/public-key` does require network; pasting a key does not.
+- [ ] Offline recording survives page reload — an E2E test covers this, but that spec is stale (asserts UI strings that no longer exist), so the claim is currently unverified
+- [x] "Recorded on this device — pending sync" — no approval language anywhere — operator receipt reads "Recorded HH-040 on this device" / "Pending sync · this is not global approval."
+- [x] Judge Mode reachable from public URL, no signup — `https://erilog-kiro.vercel.app/judge`
+- [x] Reset returns exact seed-42 state — `DELETE /api/judge` restores device sequences to 0
+- [ ] Full flow completes in ≤ 90 seconds — not measured under observation; no timing evidence recorded
 
 ---
 
 ## Submission Eligibility Checklist
 
-- [ ] All 12 PRD launch gates pass (Task 8.4)
-- [ ] No paid dependencies required for local or hosted evaluation
-- [ ] README contains no placeholders or VERIFY items
-- [ ] Every command in JUDGE-TESTING.md executed from clean environment
-- [ ] Video shows only shipped functionality
-- [ ] `.kiro/` directory contains real specs, steering, hooks used during development
-- [ ] No secrets, PII, or private keys in repository history
-- [ ] Hosting URLs stable and public
-- [ ] Performance claims backed by measurements
-- [ ] Accessibility findings documented honestly (no false WCAG conformance claim)
-- [ ] Attribution and costs documented
-- [ ] Participant eligibility confirmed under official rules
-
-**VERIFY item resolved:** Eligibility confirmation is an explicit checklist item.
+- [ ] All 12 PRD launch gates pass (Task 8.4) — not audited gate by gate against `docs/product/PRD.md`
+- [x] No paid dependencies required for local or hosted evaluation — no runtime third-party API calls; ElevenLabs was used only to generate the demo film's score and its output is committed
+- [x] README contains no placeholders or VERIFY items — remaining `VERIFY` matches are Mermaid diagram node labels
+- [ ] Every command in JUDGE-TESTING.md executed from clean environment — that file does not exist. The equivalent was done for the headline path: `pnpm install --frozen-lockfile && pnpm demo:headless` was run from a clean `git clone`, which is what exposed the missing build step.
+- [x] Video shows only shipped functionality — product frames are captures of the running app; the close states limitations explicitly
+- [x] `.kiro/` directory contains real specs, steering, hooks used during development — spec, 2 steering files, and the post-save quality-gate hook
+- [x] No secrets, PII, or private keys in repository history — `.env` files are ignored; entitlement tokens are synthetic; the signing key in `ci.yml` is the published RFC 8032 Ed25519 test vector, not a production secret
+- [x] Hosting URLs stable and public — `erilog-kiro.vercel.app`, no deployment protection
+- [x] Performance claims backed by measurements — `apps/web/tests/perf/performance.test.ts` prints timings per run
+- [x] Accessibility findings documented honestly — the axe suite audits 4 pages for critical and serious violations; the README states full WCAG conformance needs manual and assistive-technology testing
+- [ ] Attribution and costs documented — supplied in the submission form, not yet written into the repository
+- [ ] Participant eligibility confirmed under official rules — owner confirmation, cannot be verified from the repository
 
 ---
 

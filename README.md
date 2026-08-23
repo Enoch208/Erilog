@@ -13,7 +13,7 @@
 <br />
 
 [![CI](https://github.com/Enoch208/Erilog/actions/workflows/ci.yml/badge.svg)](https://github.com/Enoch208/Erilog/actions/workflows/ci.yml)
-![Tests](https://img.shields.io/badge/tests-154%20passing-10b981)
+![Tests](https://img.shields.io/badge/tests-153%20passing-10b981)
 ![Node](https://img.shields.io/badge/node-%3E%3D20-339933?logo=nodedotjs&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-4169E1?logo=postgresql&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)
@@ -100,6 +100,8 @@ The fastest way to evaluate Erilog is the headless signature demo. It uses produ
 pnpm install --frozen-lockfile
 pnpm demo:headless
 ```
+
+`demo:headless` builds the `@erilog/reconcile` and `@erilog/verifier` workspaces first, so the command works on a fresh clone with no other setup. Verified from a clean `git clone` on Node.js 20+.
 
 The ten-step proof:
 
@@ -499,23 +501,27 @@ pnpm db:setup
 ```bash
 pnpm --filter @erilog/web dev   # local web application
 pnpm demo:headless              # deterministic 10-step proof
-pnpm test                       # 154 Vitest tests
+pnpm test                       # 153 Vitest tests (11 need PostgreSQL)
 pnpm typecheck                  # workspace type checks
 pnpm build                      # production builds
 ```
 
 ## Tests and CI
 
-The root Vitest run currently passes **154 tests**:
+The root Vitest run passes **153 tests**, of which **142 need no database** and 11 require PostgreSQL:
 
-| Workspace | Tests | Coverage focus |
-|---|---:|---|
-| `@erilog/schemas` | 20 | Event, mission, sync, bundle, and exception contracts |
-| `@erilog/crypto` | 37 | Canonicalization, golden hashes, signatures, seed-42 vectors |
-| `@erilog/reconcile` | 30 | Reconciliation, permutations, seed contract, PostgreSQL integration |
-| `@erilog/verifier` | 13 | Valid archives, tampering, malformed and unsafe inputs |
-| `@erilog/web` | 54 | Sync edge cases, API behavior, security, accessibility, performance |
-| **Total** | **154** | |
+| Workspace | Tests | Needs PostgreSQL | Coverage focus |
+|---|---:|---:|---|
+| `@erilog/schemas` | 20 | — | Event, mission, sync, bundle, and exception contracts |
+| `@erilog/crypto` | 37 | — | Canonicalization, golden hashes, signatures, seed-42 vectors |
+| `@erilog/reconcile` | 30 | 11 | Reconciliation, order-permutation properties, seed contract, and append-only enforcement against a real database |
+| `@erilog/verifier` | 13 | — | Valid archives, tampering, malformed and unsafe inputs |
+| `@erilog/web` | 53 | — | Sync edge cases, API behavior, security, performance, browser-verifier parity |
+| **Total** | **153** | **11** | |
+
+Without a database, `pnpm test` reports 142 passing and the 11 PostgreSQL integration tests fail on connection rather than skipping. Start the database first (`docker compose up -d && pnpm db:setup`) to run the full suite.
+
+The property tests exercise 8 properties at 50–200 generated cases each, not a fixed 1,000 runs.
 
 Run them with:
 
@@ -523,7 +529,13 @@ Run them with:
 pnpm test
 ```
 
-Eight Playwright specifications also describe browser flows and launch-gate checks. They are not part of the root `pnpm test` command or the current CI workflow, so they are intentionally not included in the 154-test badge.
+Accessibility is covered by the Playwright axe-core suite rather than by unit tests. Four page audits (landing, judge session, operator, coordinator) assert no critical or serious WCAG 2 AA violations. Playwright specs need a running server and a browser, so they are not part of `pnpm test` or CI, and are excluded from the badge count.
+
+Run them separately:
+
+```bash
+pnpm --filter @erilog/web exec playwright test
+```
 
 GitHub Actions runs on Node.js 20 with PostgreSQL 15 and executes:
 
@@ -547,16 +559,46 @@ These constraints are documented to keep evaluation focused on what the reposito
 
 ## Kiro development process
 
-Erilog was developed through Kiro's spec workflow. Requirements, design decisions, and implementation tasks remain in the repository for traceability:
+Erilog was built with Kiro's spec workflow: requirements defined the invariants, design turned them into architecture, and tasks broke that design into traceable work. The artifacts are the real ones used during development, not documentation written afterwards.
 
-- [Requirements](.kiro/specs/erilog-core/requirements.md)
-- [Technical design](.kiro/specs/erilog-core/design.md)
-- [Implementation tasks](.kiro/specs/erilog-core/tasks.md)
-- [Product requirements](docs/product/PRD.md)
-- [Concept brief](docs/product/CONCEPT-BRIEF.md)
+- [Requirements](.kiro/specs/erilog-core/requirements.md) — `REQ-*` journeys and invariants `INV-001`–`INV-010`
+- [Technical design](.kiro/specs/erilog-core/design.md) — architecture plus the change log described below
+- [Implementation tasks](.kiro/specs/erilog-core/tasks.md) — 44 tasks, each citing the requirements it satisfies
+- [Coding standards steering](.kiro/steering/coding-standards.md) · [Visual development steering](.kiro/steering/visual-development.md)
+- [Quality-gate hook](.kiro/hooks/quality-gate.json)
+- [Product requirements](docs/product/PRD.md) · [Concept brief](docs/product/CONCEPT-BRIEF.md)
 
-The frozen seed-42 scenario acts as the thread connecting those documents to schemas, cryptographic vectors, reconciliation behavior, Judge Mode, and the executable proof.
+### The spec changed because implementation pushed back
+
+The design was reviewed before implementation and eleven blockers were found and resolved. [`design.md` Appendix A](.kiro/specs/erilog-core/design.md) records each one. The four that most changed the system:
+
+1. **Idempotency was hiding tampering.** The original sync design treated a repeated event ID as `already_seen` unconditionally. That meant an attacker could resubmit an existing ID with different content and get a success response. The design now distinguishes same-ID-same-content (`already_seen`) from same-ID-different-content (`EVENT_ID_COLLISION`, quarantined), and checks authorization before revealing whether an event exists at all.
+2. **The reconciler used data it was never given.** The first signature computed stock from events alone, but remaining stock needs initial stock and device allocations. Rather than reach for ambient state, `ReconciliationInput` was made explicit. That is what keeps reconciliation a pure function and made the order-permutation property tests possible.
+3. **Ambiguous hash format.** Hashing originally concatenated fields with delimiters, which is not stable across runtimes. It was replaced with RFC 8785 canonical JSON, with UTF-8 encoding and key ordering specified. Every signature in the project depends on that correction.
+4. **Exceptions could go stale.** Exceptions were originally mutable rows. A row written during one sync could contradict the event set after a later sync. They became recomputed projections stored as `reconciliation_snapshots` keyed by `event_set_digest`, so an exception can never disagree with the evidence it came from.
+
+A fifth correction is visible in the tests: the property tests were rewritten because the first versions did not test the claims they named. Permutation now uses `fc.shuffledSubarray` so failures shrink to a minimal case, and the no-winner property is scoped to `duplicate_entitlement` instead of asserting over all exception types.
+
+### What steering and the hook actually did
+
+`coding-standards.md` held the rules that are easy to erode under time pressure: strict TypeScript with no `any` at boundaries, Zod at every input edge, canonical hashing before signing, and append-only evidence. The one that mattered most was the invariant stated plainly — conflicts cannot disappear — because the tempting shortcut in a demo is to pick a winner and show a clean number.
+
+`visual-development.md` is a blocking rule rather than a style guide. It forbade building UI until the domain logic and its tests existed, which is why the headless proof imports production modules and does not depend on the interface.
+
+The [quality-gate hook](.kiro/hooks/quality-gate.json) runs `turbo typecheck test --affected` on every TypeScript save. Its value was scope: because reconciliation, crypto, and the verifier share the seed-42 contract, a change in one package breaks golden vectors in another, and affected-package runs surfaced that within seconds of the save rather than at the next full run.
+
+### Where human review overrode the output
+
+Three examples, all of which changed shipped code:
+
+- **A security guarantee that was documented but not enforced.** The schema revoked `UPDATE` and `DELETE` from `app_role` and the README described append-oriented permissions. Enabling CI on non-`main` branches revealed the integration tests had never run in CI, and fixing that exposed the deeper problem: the schema never granted `app_role` anything, so the revoke was a no-op against a role with no privileges. A developer machine passed because the role had been provisioned by hand. The schema now grants `SELECT, INSERT` explicitly, which is what makes the revoke meaningful, verified against a throwaway PostgreSQL container.
+- **Tests that inflated the count without testing anything.** A component-level accessibility suite asserted on local string literals (`expect('Online').toBeTruthy()`) and never touched rendered output. Ten tests were deleted rather than kept for the badge, and the badge count was corrected. Real accessibility coverage is the Playwright axe suite, which now audits four pages for critical and serious violations.
+- **A brand colour that failed contrast.** The `muted` token measured 4.47:1 against the canvas background, just under WCAG AA. It was darkened to `#616863`, and `mint.display`, `amber.strong`, and `amber.onDark` were added so display headings and small text on dark evidence panels clear the threshold. The axe suite failed on all four pages before this and passes after.
+
+The frozen seed-42 scenario is the thread connecting all of it: the same mission, devices, tokens, and expected reconciliation appear in the requirements, the design, the golden cryptographic vectors, the property tests, Judge Mode, the browser verifier, and the executable proof. When any one of them drifts, the others fail.
 
 ## License
 
-No open-source license has been granted for this repository yet. Until a license file is added, the source is available for review but should not be assumed to permit reuse, redistribution, or modification.
+[MIT](LICENSE).
+
+The demo film's narration, generated score, and sound effects under `video/` are not part of the repository and are not covered by this license.
