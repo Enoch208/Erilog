@@ -7,133 +7,118 @@ interface Props {
 export default async function JudgeSessionPage({ params }: Props) {
   const { sessionId } = await params;
 
+  const navItems = [
+    { label: 'Overview', href: `/judge/${sessionId}`, active: true },
+    { label: 'Coordinator', href: `/judge/${sessionId}/coordinator` },
+    { label: 'Device Alpha', href: `/judge/${sessionId}/operator/a1b2c3d4-0000-4000-8000-aaa000000001` },
+    { label: 'Device Bravo', href: `/judge/${sessionId}/operator/a1b2c3d4-0000-4000-8000-bbb000000002` },
+  ];
+
   return (
-    <div className="min-h-screen bg-evidence text-white">
-      {/* Header */}
-      <header className="border-b border-white/10 px-6 py-5">
-        <div className="mx-auto flex max-w-5xl items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-mint/15">
-              <span className="font-heading text-sm text-mint">E</span>
-            </div>
-            <span className="font-heading text-[15px]">Erilog</span>
+    <div className="flex min-h-screen bg-[#0a0a0f] text-white">
+      {/* Sidebar */}
+      <aside className="flex w-56 flex-col border-r border-white/[0.06] px-3 py-5">
+        <div className="flex items-center gap-2.5 px-3 pb-6">
+          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-mint/15">
+            <span className="text-[11px] font-semibold text-mint">E</span>
           </div>
-          <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5">
-            <span className="h-1.5 w-1.5 rounded-full bg-mint" />
-            <span className="mono text-[10px] text-white/50">seed-42</span>
-          </div>
-        </div>
-      </header>
-
-      <main className="mx-auto max-w-5xl px-6 py-16">
-        {/* Hero */}
-        <div className="text-center">
-          <p className="mono text-[10px] uppercase tracking-[0.2em] text-mint">Judge Mode</p>
-          <h1 className="mt-4 text-3xl font-heading tracking-tight sm:text-4xl">
-            Emergency Distribution Alpha
-          </h1>
-          <p className="mx-auto mt-3 max-w-md text-sm text-white/45">
-            2 devices · 100 emergency kits · 1 conflict token (HH-042)
-          </p>
+          <span className="text-[13px] font-semibold">Erilog</span>
         </div>
 
-        {/* Role cards */}
-        <div className="mt-14 grid gap-4 sm:grid-cols-3">
-          {/* Coordinator */}
-          <Link
-            href={`/judge/${sessionId}/coordinator`}
-            className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition-all hover:border-mint/30 hover:bg-white/[0.05]"
-          >
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-mint/10">
-              <svg className="h-5 w-5 text-mint" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z" />
-              </svg>
-            </div>
-            <h3 className="mt-5 font-heading text-[15px] group-hover:text-mint transition-colors">
-              Coordinator
-            </h3>
-            <p className="mt-2 text-[13px] leading-relaxed text-white/40">
-              Reconciled stock, exceptions, and audit export.
-            </p>
-            <div className="mt-4 flex items-center gap-1.5 text-[11px] text-mint/70">
-              <span>Open</span>
-              <svg className="h-3 w-3 transition-transform group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-              </svg>
-            </div>
-          </Link>
+        <nav className="flex flex-col gap-0.5">
+          {navItems.map((item) => (
+            <Link
+              key={item.label}
+              href={item.href}
+              className={`rounded-lg px-3 py-2 text-[13px] transition-colors ${
+                item.active
+                  ? 'bg-white/[0.08] text-white'
+                  : 'text-white/40 hover:bg-white/[0.04] hover:text-white/70'
+              }`}
+            >
+              {item.label}
+            </Link>
+          ))}
+        </nav>
 
-          {/* Operator Alpha */}
-          <Link
-            href={`/judge/${sessionId}/operator/a1b2c3d4-0000-4000-8000-aaa000000001`}
-            className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition-all hover:border-mint/30 hover:bg-white/[0.05]"
-          >
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/[0.06]">
-              <span className="font-heading text-sm text-white/70">A</span>
-            </div>
-            <h3 className="mt-5 font-heading text-[15px] group-hover:text-mint transition-colors">
-              Operator Alpha
-            </h3>
-            <p className="mt-2 text-[13px] leading-relaxed text-white/40">
-              50 kits allocated. Record handouts offline.
-            </p>
-            <div className="mt-4 flex items-center gap-1.5 text-[11px] text-white/30">
-              <span>Open</span>
-              <svg className="h-3 w-3 transition-transform group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-              </svg>
-            </div>
-          </Link>
-
-          {/* Operator Bravo */}
-          <Link
-            href={`/judge/${sessionId}/operator/a1b2c3d4-0000-4000-8000-bbb000000002`}
-            className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition-all hover:border-mint/30 hover:bg-white/[0.05]"
-          >
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/[0.06]">
-              <span className="font-heading text-sm text-white/70">B</span>
-            </div>
-            <h3 className="mt-5 font-heading text-[15px] group-hover:text-mint transition-colors">
-              Operator Bravo
-            </h3>
-            <p className="mt-2 text-[13px] leading-relaxed text-white/40">
-              50 kits allocated. Record handouts offline.
-            </p>
-            <div className="mt-4 flex items-center gap-1.5 text-[11px] text-white/30">
-              <span>Open</span>
-              <svg className="h-3 w-3 transition-transform group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-              </svg>
-            </div>
-          </Link>
+        <div className="mt-auto rounded-lg border border-white/[0.06] bg-white/[0.02] px-3 py-3">
+          <p className="text-[12px] font-medium text-mint">seed-42</p>
+          <p className="mt-0.5 text-[11px] text-white/30">Emergency Distribution Alpha</p>
         </div>
+      </aside>
 
-        {/* Demo steps */}
-        <div className="mt-14 rounded-2xl border border-white/10 bg-white/[0.02] p-7">
-          <div className="flex items-center gap-3">
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-mint/10">
-              <svg className="h-4 w-4 text-mint" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 0 1 0 3.75H5.625a1.875 1.875 0 0 1 0-3.75Z" />
-              </svg>
-            </div>
-            <h3 className="font-heading text-[14px]">Demo Flow</h3>
-          </div>
-          <div className="mt-5 grid gap-3 sm:grid-cols-2">
-            {[
-              'Record HH-040, HH-042 on Alpha (offline)',
-              'Record HH-041, HH-042 on Bravo (offline)',
-              'Sync both devices',
-              'Coordinator: 4 distributed, 96 remaining',
-              'Export audit bundle → verify PASS',
-              'Tamper quantity → verify FAIL',
-            ].map((step, i) => (
-              <div key={i} className="flex items-start gap-3">
-                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-[10px] text-white/40">
-                  {i + 1}
+      {/* Main */}
+      <main className="flex-1 px-10 py-8">
+        <div className="max-w-4xl">
+          <h1 className="text-xl font-semibold">Overview</h1>
+          <p className="mt-1 text-[13px] text-white/35">Seed-42 scenario · 2 devices, 100 kits</p>
+
+          {/* Metric cards */}
+          <div className="mt-8 grid grid-cols-4 gap-3">
+            <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5">
+              <div className="flex items-center justify-between">
+                <span className="text-[12px] text-white/40">Total stock</span>
+                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-white/[0.06]">
+                  <svg className="h-3.5 w-3.5 text-white/30" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" /></svg>
                 </span>
-                <span className="text-[13px] text-white/50">{step}</span>
               </div>
-            ))}
+              <p className="mt-4 text-3xl font-semibold">100</p>
+              <p className="mt-1 text-[11px] text-white/25">emergency kits available</p>
+            </div>
+
+            <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5">
+              <div className="flex items-center justify-between">
+                <span className="text-[12px] text-white/40">Devices</span>
+                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-white/[0.06]">
+                  <svg className="h-3.5 w-3.5 text-white/30" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 0 0 6 3.75v16.5a2.25 2.25 0 0 0 2.25 2.25h7.5A2.25 2.25 0 0 0 18 20.25V3.75a2.25 2.25 0 0 0-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3" /></svg>
+                </span>
+              </div>
+              <p className="mt-4 text-3xl font-semibold">2</p>
+              <p className="mt-1 text-[11px] text-white/25">Alpha and Bravo</p>
+            </div>
+
+            <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5">
+              <div className="flex items-center justify-between">
+                <span className="text-[12px] text-white/40">Policy</span>
+                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-white/[0.06]">
+                  <svg className="h-3.5 w-3.5 text-white/30" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" /></svg>
+                </span>
+              </div>
+              <p className="mt-4 text-3xl font-semibold">v0</p>
+              <p className="mt-1 text-[11px] text-white/25">1 kit per entitlement</p>
+            </div>
+
+            <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5">
+              <div className="flex items-center justify-between">
+                <span className="text-[12px] text-white/40">Conflict token</span>
+                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-white/[0.06]">
+                  <svg className="h-3.5 w-3.5 text-white/30" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" /></svg>
+                </span>
+              </div>
+              <p className="mt-4 font-mono text-2xl font-semibold">HH-042</p>
+              <p className="mt-1 text-[11px] text-white/25">used on both devices</p>
+            </div>
+          </div>
+
+          {/* Demo flow */}
+          <div className="mt-8 rounded-xl border border-white/[0.06] bg-white/[0.02] p-6">
+            <p className="mono text-[10px] uppercase tracking-[0.15em] text-white/25">Demo Flow</p>
+
+            <div className="mt-5 space-y-4">
+              {[
+                { step: '1', text: 'Open Alpha → record HH-040 and HH-042 offline' },
+                { step: '2', text: 'Open Bravo → record HH-041 and HH-042 offline' },
+                { step: '3', text: 'Sync both devices' },
+                { step: '4', text: 'Coordinator shows 4 distributed, 96 remaining, 1 exception' },
+                { step: '5', text: 'Export audit bundle → verify PASS' },
+                { step: '6', text: 'Tamper quantity 1→2 → verify FAIL' },
+              ].map((item) => (
+                <div key={item.step} className="flex items-baseline gap-4">
+                  <span className="mono text-[11px] text-white/20">{item.step}.</span>
+                  <span className="text-[13px] text-white/50">{item.text}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </main>
