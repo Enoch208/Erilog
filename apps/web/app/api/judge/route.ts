@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { eq } from 'drizzle-orm';
 import { db } from '@/lib/server/db';
 import { missions, policyVersions, devices, events, reconciliationSnapshots } from '@/lib/server/schema';
@@ -73,14 +73,12 @@ async function seedMission(): Promise<string> {
   return SEED_42_MISSION.id;
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
     const missionId = await seedMission();
     const { sessionId } = await createSession(missionId);
 
-    return NextResponse.redirect(
-      new URL(`/judge/${sessionId}`, process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000')
-    );
+    return NextResponse.redirect(new URL(`/judge/${sessionId}`, request.nextUrl.origin));
   } catch (error) {
     console.error('Judge session creation failed:', error);
     return NextResponse.json({ error: 'Failed to create session' }, { status: 500 });
