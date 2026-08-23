@@ -1,0 +1,40 @@
+# Keep deployment uploads small and reliable.
+# Vercel installs dependencies and builds on its own runners, so local
+# artifacts and the demo-film workspace must never be uploaded.
+
+node_modules
+**/node_modules
+
+# Build output and caches
+.next
+**/.next
+dist
+**/dist
+.turbo
+**/.turbo
+*.tsbuildinfo
+
+# Demo film workspace (renders, narration audio, generated score)
+video
+
+# Local environment and scratch space
+.env
+.env.local
+.env.*.local
+tmp
+.tmp
+t.json
+
+# Test artifacts
+coverage
+test-results
+playwright-report
+**/test-results
+**/playwright-report
+
+# Local tooling
+.git
+.github
+.vscode
+.idea
+.DS_Store
