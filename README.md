@@ -24,7 +24,7 @@ Erilog preserves every recorded handout, reconciles disconnected field devices d
 
 **Core guarantee: conflicts cannot disappear.**
 
-### [▶ Open Judge Mode](https://erilog-kiro.vercel.app/judge) · [✔ Verify a bundle](https://erilog-kiro.vercel.app/verify)
+### [▶ Open Judge Mode](https://erilog-kiro.vercel.app/judge) · [✔ Verify a bundle](https://erilog-kiro.vercel.app/verify) · [🎬 Watch the demo](https://youtu.be/ey6wfOQmP8k)
 
 **No signup. No login. No setup.** Judge Mode provisions a deterministic seed-42 session on click.
 
@@ -33,6 +33,28 @@ Erilog preserves every recorded handout, reconciles disconnected field devices d
 </div>
 
 ---
+
+## Demo video
+
+**[Watch on YouTube](https://youtu.be/ey6wfOQmP8k)** — 3 minutes 49 seconds.
+
+The film runs the seed-42 mission end to end: two operators record handouts offline, both devices sync, reconciliation reports 4 distributed / 96 remaining / 3 unique entitlements / 1 unresolved exception, a signed bundle is exported, and one quantity is changed from `1` to `2` so the verifier names `file_checksum` on `events.json`.
+
+| Time | Chapter |
+|---|---|
+| 0:00 | The offline contradiction |
+| 0:30 | The synthetic mission |
+| 0:43 | Proof first: tampering caught |
+| 1:04 | Seed-42 setup |
+| 1:17 | Alpha records offline |
+| 1:30 | Bravo records the same entitlement, then both sync |
+| 2:00 | Deterministic reconciliation |
+| 2:31 | Signed audit bundle |
+| 2:52 | Tamper verification returns |
+| 3:14 | What Erilog does and does not promise |
+| 3:31 | How Kiro built it |
+
+Product frames are captures of the running application, not mockups. The close states the project's limits rather than overselling them.
 
 ## Product proof
 
@@ -74,6 +96,7 @@ The result is an evidence trail designed around three properties:
 
 ## Table of contents
 
+- [Demo video](#demo-video)
 - [Product proof](#product-proof)
 - [Run the deterministic proof](#run-the-deterministic-proof)
 - [Run Judge Mode](#run-judge-mode)
