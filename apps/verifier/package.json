@@ -9,6 +9,14 @@
     ".": {
       "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
+    },
+    "./core": {
+      "import": "./dist/verifier.js",
+      "types": "./dist/verifier.d.ts"
+    },
+    "./tamper-lab": {
+      "import": "./dist/tamper-lab.js",
+      "types": "./dist/tamper-lab.d.ts"
     }
   },
   "scripts": {

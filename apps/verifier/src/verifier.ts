@@ -13,7 +13,7 @@
  * 6. Compare recomputed result to declared summary
  */
 
-import { reconcile } from '@erilog/reconcile';
+import { reconcile } from '@erilog/reconcile/browser';
 import type { HandoutEvent, MissionPolicy, DeviceAllocation } from '@erilog/schemas';
 import {
   canonicalize,

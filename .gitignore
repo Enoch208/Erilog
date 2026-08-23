@@ -35,6 +35,8 @@ yarn-error.log*
 t.json
 # Testing
 coverage/
+test-results/
+playwright-report/
 
 # Docker
 docker-compose.override.yml
@@ -53,3 +55,6 @@ tmp/
 .tmp/
 apps/web/tsconfig.tsbuildinfo
 .vercel/
+
+# Generated demo film workspace
+video/

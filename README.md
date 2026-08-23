@@ -324,6 +324,24 @@ The verifier performs layered checks:
 
 A changed quantity fails the `file_checksum` check for `events.json`; deeper recomputation checks protect the evidence model even when an archive is reconstructed rather than edited in place.
 
+### Verify in the browser
+
+The same verifier core runs client-side at [`/verify`](https://erilog-kiro.vercel.app/verify). Drop in an exported bundle and every layer above is reported individually, with the failing file plus expected and observed values.
+
+```text
+01 Archive safety              PASS
+02 Manifest parse              PASS
+03 Ed25519 signature           PASS
+04 Key identity                PASS
+05 Manifest completeness       PASS
+06 File checksums              PASS
+07 Reconciliation recomputation PASS
+```
+
+The bundle is never uploaded: the ZIP is parsed, hashed, signature-checked, and reconciled entirely in the page. A built-in tamper test changes one recorded quantity from `1` to `2` and shows the verifier naming `file_checksum · events.json`, then recomputing that the declared totals would shift from 4/96 to 5/95.
+
+Because the reconciliation kernel must run in the browser, `@erilog/reconcile` exposes a `./browser` entry point that omits the Node-only ZIP writer, and the verifier core is imported through `@erilog/verifier/core`. The browser ZIP reader enforces the same path, count, size, and compression-ratio limits as the Node reader, and a parity test asserts both readers extract byte-identical files from the same archive.
+
 ## Engineering decisions
 
 ### Preserve physical truth before resolving policy truth
@@ -375,11 +393,11 @@ Cryptographic evidence proves integrity relative to the signing key and recorded
 | PostgreSQL persistence | Implemented | Events and reconciliation snapshots persisted server-side |
 | Signed ZIP export | Implemented | Canonical files, checksums, manifest, Ed25519 signature |
 | Verifier core and tamper lab | Implemented | Library and headless proof return detailed failures |
+| Browser verifier page | Implemented | `/verify` runs the same verifier core client-side over an uploaded bundle |
 | Judge Mode | Implemented | Local deterministic coordinator/operator workflow |
 | PWA manifest and production service worker | Partial | Static assets are cached; development unregisters the worker |
 | Full offline navigation/reload | Partial | Already-loaded operator workflow works offline; full app shell is not guaranteed |
 | Device allocations in exported verification context | Partial | Current verifier integration uses an oversized inferred allocation |
-| Browser verifier page | Not shipped | No `/verify` interface or deployable static verifier yet |
 | Automatic background sync | Not shipped | Sync is explicitly user-triggered |
 | QR scanning | Not shipped | Judge Mode uses typed seed tokens |
 | Exception resolution workflow | Not shipped | Exceptions are exposed but not adjudicated in the UI |
@@ -498,8 +516,7 @@ install → typecheck → Vitest → build → headless proof
 
 Erilog is a working technical demonstration, not a finished deployment:
 
-- There is no hosted environment or deployment configuration.
-- The independent verifier is implemented as a library and headless workflow, not a browser page.
+- The browser verifier at `/verify` loads this deployment's public key for convenience. Genuinely independent verification requires obtaining the key out of band and pasting it in, which the page supports.
 - Offline support covers recording on an already-loaded operator page; arbitrary navigation and hard reloads are not fully offline.
 - Synchronization is user-triggered rather than scheduled through the Background Sync API.
 - Judge sessions share one fixed mission, and reset affects the global demonstration state.

@@ -14,6 +14,7 @@
     "@erilog/crypto": "workspace:*",
     "@erilog/reconcile": "workspace:*",
     "@erilog/schemas": "workspace:*",
+    "@erilog/verifier": "workspace:*",
     "@hugeicons/core-free-icons": "4.3.0",
     "@hugeicons/react": "1.1.10",
     "@neondatabase/serverless": "^1.1.0",
